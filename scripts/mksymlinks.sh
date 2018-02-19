@@ -7,8 +7,8 @@ rootdir="$(dirname "$scriptdir")"
 
 # set web root
 webroot=$rootdir/webroot
-ln -s $webroot /var/www/html/solarpi 
-
+ln -s $webroot /var/www/html/gardener
+ln -s $rootdir/index.php /var/www/html/index.php
 
 echo $rootdir
 echo $scriptdir
