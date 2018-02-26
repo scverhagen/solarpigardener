@@ -1,5 +1,5 @@
 CXX=g++
 
 all: 
-	$(CXX) gardener.cpp -o gardener
+	$(CXX) -std=c++11 -lwiringPi gardener.cpp -o gardener
 	
