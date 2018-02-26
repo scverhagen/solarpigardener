@@ -18,7 +18,8 @@
 #define pin_waterpump 2
 
 // other parameters:
-#define shutdown_voltage 11.0
+#define voltage_shutdown 11.0
+#define voltage_max 14.4
 
 using std::ifstream;
 using std::ofstream;
@@ -30,7 +31,10 @@ int main(void);
 int gardener_init();
 int gardener_loop();
 float gardener_get_battery_voltage();
+float gardener_get_battery_percentage();
+
 int write_param(string param_name, string param_data);
+void clear_param(string param_name);
 string cmd_get();
 void cmd_clear();
 void process_command(string gardener_cmd);
@@ -69,8 +73,16 @@ int gardener_init()
 	pinMode(pin_waterpump, OUTPUT);
 	digitalWrite(pin_waterpump, LOW);
 
-	// create /tmp-gardener directory
+	// create /tmp-gardener directory:
 	dir_err = system("mkdir -p /tmp-gardener");
+	// set permissions:
+	dir_err = system("chmod -R 0777 /tmp-gardener");
+	// clear left-over files:
+	dir_err = system("rm /tmp-gardener/*");
+	
+	// set up parameters:
+	clear_param("battery_percentage");
+	clear_param("battery_voltage");
 	dir_err = system("chmod -R 0777 /tmp-gardener");
 	
 	// init daemon cmd functionality:
@@ -85,17 +97,22 @@ int gardener_loop()
 {
     string currentcmd;
 	float voltage;
+	float voltage_percentage;
 	
     while (1)
     {   
 
-		usleep(1000 * 1000);
+	usleep(1000 * 1000);
 		
-		//write voltage param:
-		voltage = gardener_get_battery_voltage();
-		write_param("battery_voltage", std::to_string(voltage));
+	//write voltage param:
+	voltage = gardener_get_battery_voltage();
+	write_param("battery_voltage", std::to_string(voltage));
 
-		//get command (if exists) and process it:
+	//write voltage percentage param:
+	voltage_percentage = gardener_get_battery_percentage();
+	write_param("battery_percentage", std::to_string(voltage_percentage));
+
+	//get command (if exists) and process it:
         currentcmd = cmd_get();
         if ( currentcmd != "0" )
         {
@@ -118,11 +135,31 @@ int write_param(string param_name, string param_data)
 	return 0;
 }
 
+void clear_param(string param_name)
+{
+	write_param(param_name, std::to_string(0));
+	string param_path = "/tmp-gardener/gardener_" + param_name;
+	chmod(param_path.c_str(), 777);
+	return;
+}
+
 float gardener_get_battery_voltage()
 {
 	float voltage = 0.0;
-	voltage = analogRead(ch0) / 32767.0 * 24.0;
+	// divide by 4.092 ?
+	voltage = (analogRead(ch0) / 32767.0 * 24.0) - 1;
+	// voltage = analogRead(ch0) / 4.092;
 	return voltage;
+}
+
+float gardener_get_battery_percentage()
+{
+	float voltage = 0.0;
+	float percentage = 0.0;
+	
+	voltage = gardener_get_battery_voltage();
+	percentage = voltage / voltage_max * 100;
+	return percentage;
 }
 
 void cmd_clear()

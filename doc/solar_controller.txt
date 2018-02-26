@@ -1,0 +1,18 @@
+Anself 20A 12V solar controller
+
+Specifications: 
+Color: Black 
+Rated Voltage: 12V / 24V (Auto Switch) 
+Rated Charge Current: 10A / 20A (Optional) 
+Rated Load Current: 10A / 20A 
+Stop Power Supply Voltage: 10.8V / 21.6V 
+Resume Power Supply Voltage: 12.6V / 25.2V 
+Stop Charging Voltage: 14.4V / 28.8V 
+Temperature Compensation: -3mV/Cell/°C 
+Operation Temperature: -20°C~60°C 
+Item Size: 103 * 95 * 38mm / 4 * 3.74 * 1.5in 
+Item Weight: 117g / 4.14oz 
+Package Size: 11.5 * 10 * 5.2cm / 4.5 * 3.94 * 2in 
+Package Weight: 153g / 5.41oz
+
+

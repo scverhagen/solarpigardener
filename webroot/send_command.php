@@ -5,7 +5,7 @@ if ( isset($_GET['cmd']) )
 	echo 'Command sent:<hr>';
 	echo file_get_contents("/tmp-gardener/gardener.cmd");
 	echo "<hr>";
-	echo 'Go <a href="javascript: history.go(-1);">back</a>.';
+	echo 'Go <a href="http:/">back</a>.';
 
 } else {
 	echo 'No command specified';

@@ -7,7 +7,7 @@
 Solar Pi Gardener
 </h2>
 <?php
-echo 'Voltage reading: ' . file_get_contents("/tmp-gardener/gardener_battery_voltage") . '<br>';
+echo 'Voltage reading: ' . file_get_contents("/tmp-gardener/gardener_battery_voltage") . 'V ( ' . file_get_contents("/tmp-gardener/gardener_battery_percentage") . '% )<br>';
 echo '<hr>';
 echo '<b>Commands:</b><br>';
 echo '<a href="send_command.php?cmd=fanon">Case Fan On</a><br>';
