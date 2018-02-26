@@ -2,6 +2,7 @@
 #include <fstream>
 #include <unistd.h>
 #include <string>
+#include <sys/stat.h>
 #include <wiringPi.h>
 
 // adc
@@ -16,7 +17,11 @@
 #define pin_fan 0
 #define pin_waterpump 2
 
+// other parameters:
+#define shutdown_voltage 11.0
+
 using std::ifstream;
+using std::ofstream;
 using std::string;
 using std::cout;
 using std::flush;
@@ -24,6 +29,11 @@ using std::flush;
 int main(void);
 int gardener_init();
 int gardener_loop();
+float gardener_get_battery_voltage();
+int write_param(string param_name, string param_data);
+string cmd_get();
+void cmd_clear();
+void process_command(string gardener_cmd);
 
 int main(void)
 {
@@ -42,14 +52,14 @@ int main(void)
 
 int gardener_init()
 {
+	int dir_err;
+	// init i2c adc interface:
+	cout << "init i2c adc interface...\n";
+	ads1115Setup(MY_PINBASE, 0x48);
 
 	// init wiringPi (gpio library)
 	cout << "init wiringPi GPIO library...\n";
 	wiringPiSetup();
-	
-	// init i2c adc interface:
-	cout << "init i2c adc interface...\n";
-	ads1115Setup(MY_PINBASE, 0x48);
 
 	// fan:
 	pinMode(pin_fan, OUTPUT);
@@ -58,6 +68,13 @@ int gardener_init()
 	// water pump:
 	pinMode(pin_waterpump, OUTPUT);
 	digitalWrite(pin_waterpump, LOW);
+
+	// create /tmp-gardener directory
+	dir_err = system("mkdir -p /tmp-gardener");
+	dir_err = system("chmod -R 0777 /tmp-gardener");
+	
+	// init daemon cmd functionality:
+	cmd_clear();
 	
 	cout << "init routine complete.\n";
 	return 0;
@@ -67,17 +84,72 @@ int gardener_init()
 int gardener_loop()
 {
     string currentcmd;
-    ifstream ifs;
-    int data1;
+	float voltage;
 	
     while (1)
-    {        
-		// writefile("/tmp/gardener_battery_voltage", gardener_get_battery_voltage());
-        delay(500);
-		data1 = analogRead(ch0);
-        cout << "." << data1;
+    {   
+
+		usleep(1000 * 1000);
+		
+		//write voltage param:
+		voltage = gardener_get_battery_voltage();
+		write_param("battery_voltage", std::to_string(voltage));
+
+		//get command (if exists) and process it:
+        currentcmd = cmd_get();
+        if ( currentcmd != "0" )
+        {
+            cout << "Process command:  " << currentcmd << "\n";
+			process_command(currentcmd);
+        }		
+		
 		cout << flush;
 		
     }
-    
+}
+
+int write_param(string param_name, string param_data)
+{
+	std::ofstream ofs;
+	ofs.open ("/tmp-gardener/gardener_" + param_name );
+	//cout << "writing: " << ROVERSHELL_COMMAND;
+	ofs << param_data;
+	ofs.close();
+	return 0;
+}
+
+float gardener_get_battery_voltage()
+{
+	float voltage = 0.0;
+	voltage = analogRead(ch0) / 32767.0 * 24.0;
+	return voltage;
+}
+
+void cmd_clear()
+{
+    ofstream ofs;
+    ofs.open ("/tmp-gardener/gardener.cmd", std::ofstream::out | std::ofstream::trunc);
+    ofs << 0;
+    ofs.close();
+	chmod("/tmp-gardener/gardener.cmd", 0777);
+}
+
+string cmd_get()
+{
+    ifstream ifs("/tmp-gardener/gardener.cmd");
+    std::string currentcmd( (std::istreambuf_iterator<char>(ifs) ), (std::istreambuf_iterator<char>()) );
+    ifs.close();
+    cmd_clear();    
+    return currentcmd;
+}
+
+void process_command(string gardener_cmd)
+{
+	// check for 'fanon' command:
+	if ( gardener_cmd == "fanon" )
+		digitalWrite(pin_fan, HIGH);
+	
+	if ( gardener_cmd == "fanoff" )
+		digitalWrite(pin_fan, LOW);
+	
 }
