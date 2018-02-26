@@ -147,7 +147,7 @@ float gardener_get_battery_voltage()
 {
 	float voltage = 0.0;
 	// divide by 4.092 ?
-	voltage = (analogRead(ch0) / 32767.0 * 24.0) - 1;
+	voltage = (analogRead(ch0) / 32767.0 * 24.0) - 1.129;
 	// voltage = analogRead(ch0) / 4.092;
 	return voltage;
 }
