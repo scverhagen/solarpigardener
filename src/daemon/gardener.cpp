@@ -95,7 +95,7 @@ int gardener_init()
 
 int gardener_loop()
 {
-    string currentcmd;
+	string currentcmd;
 	float voltage;
 	float voltage_percentage;
 	
@@ -112,7 +112,16 @@ int gardener_loop()
 	voltage_percentage = gardener_get_battery_percentage();
 	write_param("battery_percentage", std::to_string(voltage_percentage));
 
-	//get command (if exists) and process it:
+	//ongoing logic:
+	//turn fan on if battery percentage >= 99% (battery fully charged)
+	if ( voltage_percentage >=99  )
+	{
+		digitalWrite(pin_fan, HIGH);
+	} else {
+		digitalWrite(pin_fan, LOW);
+	}
+
+	//get user command (if exists) and process it:
         currentcmd = cmd_get();
         if ( currentcmd != "0" )
         {
