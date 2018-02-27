@@ -19,7 +19,8 @@
 
 // other parameters:
 #define voltage_shutdown 11.0
-#define voltage_max 14.4
+#define charging_voltage_max 14.4
+#define battery_voltage_max 12.6
 
 using std::ifstream;
 using std::ofstream;
@@ -113,8 +114,8 @@ int gardener_loop()
 	write_param("battery_percentage", std::to_string(voltage_percentage));
 
 	//ongoing logic:
-	//turn fan on if battery percentage >= 99% (battery fully charged)
-	if ( voltage_percentage >=99  )
+	//turn fan on if battery percentage >= 100% (battery fully charged)
+	if ( voltage_percentage >= 100 )
 	{
 		digitalWrite(pin_fan, HIGH);
 	} else {
@@ -154,11 +155,21 @@ void clear_param(string param_name)
 
 float gardener_get_battery_voltage()
 {
-	float voltage = 0.0;
-	// divide by 4.092 ?
-	voltage = (analogRead(ch0) / 32767.0 * 24.0) - 1.129;
+	int avalue = 0;
+	float vin = 0.0;
+	float vout = 0.0;
+	float R1 = 30000.0;
+	float R2 = 7500;
+	
+	avalue = analogRead(ch0);
+	vout = (avalue * 5.0) / 32767;
+	vin = vout / (R2/(R1+R2));
+	vin -= 1.6; // misc adjustment
+
+	// voltage = (analogRead(ch0) / 32767.0 * 24.0) - 2.4;
 	// voltage = analogRead(ch0) / 4.092;
-	return voltage;
+
+	return vin;
 }
 
 float gardener_get_battery_percentage()
@@ -168,12 +179,12 @@ float gardener_get_battery_percentage()
 	float capacity_remaining = 0.0;
 	float capacity_percentage = 0.0;
 	
-	float usable_capacity = voltage_max - voltage_shutdown;
+	float usable_capacity = battery_voltage_max - voltage_shutdown;
 	voltage = gardener_get_battery_voltage();
 	
 	capacity_remaining = voltage - voltage_shutdown;
 
-	total_percentage = voltage / voltage_max * 100;
+	total_percentage = voltage / battery_voltage_max * 100;
 	capacity_percentage = capacity_remaining / usable_capacity * 100;
 	return capacity_percentage;
 }
