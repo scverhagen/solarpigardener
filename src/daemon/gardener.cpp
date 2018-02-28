@@ -155,18 +155,18 @@ void clear_param(string param_name)
 
 float gardener_get_battery_voltage()
 {
-	int avalue = 0;
+	// int avalue = 0;
 	float vin = 0.0;
-	float vout = 0.0;
-	float R1 = 30000.0;
-	float R2 = 7500;
+	// float vout = 0.0;
+	// float R1 = 30000.0;
+	// float R2 = 7500;
 	
-	avalue = analogRead(ch0);
-	vout = (avalue * 5.0) / 32767;
-	vin = vout / (R2/(R1+R2));
-	vin -= 1.6; // misc adjustment
+	// avalue = analogRead(ch0);
+	// vout = (avalue * 5.0) / 32767;
+	// vin = vout / (R2/(R1+R2));
+	// vin -= 1.6; // misc adjustment
 
-	// voltage = (analogRead(ch0) / 32767.0 * 24.0) - 2.4;
+	vin = (analogRead(ch0) / 32767.0 * 24.0) - 2.4;
 	// voltage = analogRead(ch0) / 4.092;
 
 	return vin;
