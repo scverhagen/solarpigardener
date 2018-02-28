@@ -45,6 +45,12 @@ int main(void)
 	cout << "Solar Pi Gardener\n";
 	cout << "Background daemon\n";
 	cout << "(C) Steve Verhagen 2018\n\n";
+	if ( getuid() !=0 )
+	{
+		cout << "ERROR:  This program must run with root priviledges!\n";
+		return 1;
+	}
+
 	cout << flush;
 
 	// init routine
