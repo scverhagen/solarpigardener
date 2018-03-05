@@ -5,22 +5,13 @@
 #include <sys/stat.h>
 #include <wiringPi.h>
 
-// adc
-#include <ads1115.h>
-#define MY_PINBASE 2222
-#define ch0 MY_PINBASE + 0
-#define ch1 MY_PINBASE + 1
-#define ch2 MY_PINBASE + 2
-#define ch3 MY_PINBASE + 3
+#include "gardener_cmd.h"
+#include "gardener_battery.h"
+#include "gardener_adc.h"
 
 // gpio pin configuration
 #define pin_fan 0
 #define pin_waterpump 2
-
-// other parameters:
-#define voltage_shutdown 11.0
-#define charging_voltage_max 14.4
-#define battery_voltage_max 12.6
 
 using std::ifstream;
 using std::ofstream;
@@ -31,14 +22,11 @@ using std::flush;
 int main(void);
 int gardener_init();
 int gardener_loop();
-float gardener_get_battery_voltage();
-float gardener_get_battery_percentage();
 
-int write_param(string param_name, string param_data);
-void clear_param(string param_name);
-string cmd_get();
-void cmd_clear();
-void process_command(string gardener_cmd);
+int write_gardener_param(string param_name, string param_data);
+void clear_gardener_param(string param_name);
+
+void process_gardener_command( gardener_command gc );
 
 int main(void)
 {
@@ -47,7 +35,7 @@ int main(void)
 	cout << "(C) Steve Verhagen 2018\n\n";
 	if ( getuid() !=0 )
 	{
-		cout << "ERROR:  This program must run with root priviledges!\n";
+		cout << "ERROR:  This program must run as root!\n";
 		return 1;
 	}
 
@@ -88,12 +76,12 @@ int gardener_init()
 	dir_err = system("rm /tmp-gardener/*");
 	
 	// set up parameters:
-	clear_param("battery_percentage");
-	clear_param("battery_voltage");
+	clear_gardener_param("battery_percentage");
+	clear_gardener_param("battery_voltage");
 	dir_err = system("chmod -R 0777 /tmp-gardener");
 	
 	// init daemon cmd functionality:
-	cmd_clear();
+	gardener_cmd_clear();
 	
 	cout << "init routine complete.\n";
 	return 0;
@@ -102,7 +90,7 @@ int gardener_init()
 
 int gardener_loop()
 {
-	string currentcmd;
+	gardener_command gc;
 	float voltage;
 	float voltage_percentage;
 	
@@ -113,11 +101,11 @@ int gardener_loop()
 		
 	//write voltage param:
 	voltage = gardener_get_battery_voltage();
-	write_param("battery_voltage", std::to_string(voltage));
+	write_gardener_param("battery_voltage", std::to_string(voltage));
 
 	//write voltage percentage param:
 	voltage_percentage = gardener_get_battery_percentage();
-	write_param("battery_percentage", std::to_string(voltage_percentage));
+	write_gardener_param("battery_percentage", std::to_string(voltage_percentage));
 
 	//ongoing logic:
 	//turn fan on if battery percentage >= 100% (battery fully charged)
@@ -129,11 +117,12 @@ int gardener_loop()
 	}
 
 	//get user command (if exists) and process it:
-        currentcmd = cmd_get();
-        if ( currentcmd != "0" )
+        gc = gardener_cmd_get();
+        if ( gc.command_isblank == FALSE )
         {
-            cout << "Process command:  " << currentcmd << "\n";
-			process_command(currentcmd);
+            cout << "Process command:  " << gc.command << "\n";
+            cout << "Arg count: " << gc.argcount << "\n";
+            process_gardener_command(gc);
         }		
 		
 		cout << flush;
@@ -141,7 +130,7 @@ int gardener_loop()
     }
 }
 
-int write_param(string param_name, string param_data)
+int write_gardener_param(string param_name, string param_data)
 {
 	std::ofstream ofs;
 	ofs.open ("/tmp-gardener/gardener_" + param_name );
@@ -151,75 +140,21 @@ int write_param(string param_name, string param_data)
 	return 0;
 }
 
-void clear_param(string param_name)
+void clear_gardener_param(string param_name)
 {
-	write_param(param_name, std::to_string(0));
+	write_gardener_param(param_name, std::to_string(0));
 	string param_path = "/tmp-gardener/gardener_" + param_name;
 	chmod(param_path.c_str(), 777);
 	return;
 }
 
-float gardener_get_battery_voltage()
-{
-	// int avalue = 0;
-	float vin = 0.0;
-	// float vout = 0.0;
-	// float R1 = 30000.0;
-	// float R2 = 7500;
-	
-	// avalue = analogRead(ch0);
-	// vout = (avalue * 5.0) / 32767;
-	// vin = vout / (R2/(R1+R2));
-	// vin -= 1.6; // misc adjustment
-
-	vin = (analogRead(ch0) / 32767.0 * 24.0) - 2.4;
-	// voltage = analogRead(ch0) / 4.092;
-
-	return vin;
-}
-
-float gardener_get_battery_percentage()
-{
-	float voltage = 0.0;
-	float total_percentage = 0.0;
-	float capacity_remaining = 0.0;
-	float capacity_percentage = 0.0;
-	
-	float usable_capacity = battery_voltage_max - voltage_shutdown;
-	voltage = gardener_get_battery_voltage();
-	
-	capacity_remaining = voltage - voltage_shutdown;
-
-	total_percentage = voltage / battery_voltage_max * 100;
-	capacity_percentage = capacity_remaining / usable_capacity * 100;
-	return capacity_percentage;
-}
-
-void cmd_clear()
-{
-    ofstream ofs;
-    ofs.open ("/tmp-gardener/gardener.cmd", std::ofstream::out | std::ofstream::trunc);
-    ofs << 0;
-    ofs.close();
-	chmod("/tmp-gardener/gardener.cmd", 0777);
-}
-
-string cmd_get()
-{
-    ifstream ifs("/tmp-gardener/gardener.cmd");
-    std::string currentcmd( (std::istreambuf_iterator<char>(ifs) ), (std::istreambuf_iterator<char>()) );
-    ifs.close();
-    cmd_clear();    
-    return currentcmd;
-}
-
-void process_command(string gardener_cmd)
+void process_gardener_command( gardener_command gc )
 {
 	// check for 'fanon' command:
-	if ( gardener_cmd == "fanon" )
+	if ( gc.command == "fanon" )
 		digitalWrite(pin_fan, HIGH);
 	
-	if ( gardener_cmd == "fanoff" )
+	if ( gc.command == "fanoff" )
 		digitalWrite(pin_fan, LOW);
 	
 }
