@@ -147,11 +147,29 @@ void clear_gardener_param(string param_name)
 
 void process_gardener_command( gardener_command gc )
 {
-    // check for 'fanon' command:
+    // check for 'water_pump_on' command:
     if ( gc.command == "water_pump_on" )
     {
         string arg1 = gc.args.front();
         gardener_water_pump_on( atoi(arg1.c_str() ) );
-    }	
-	
+    }
+    
+    // check for 'system_reboot' command:
+    if ( gc.command == "system_reboot" )
+    {
+        int dir_err;
+        cout << "Rebooting system...\n";
+        cout.flush();
+        dir_err = system("reboot");
+    }
+
+    // check for 'system_poweroff' command:
+    if ( gc.command == "system_poweroff" )
+    {
+        int dir_err;
+        cout << "Powering system OFF...\n";
+        cout.flush();
+        dir_err = system("poweroff");
+    }
+    	
 }

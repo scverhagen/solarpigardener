@@ -3,7 +3,11 @@
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <df root="." name="0">
       <in>gardener.cpp</in>
+      <in>gardener_adc.h</in>
+      <in>gardener_battery.h</in>
       <in>gardener_cmd.h</in>
+      <in>gardener_fan.h</in>
+      <in>gardener_water.h</in>
     </df>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
