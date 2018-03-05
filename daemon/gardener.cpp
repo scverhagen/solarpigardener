@@ -67,7 +67,8 @@ int gardener_init()
         int dir_err;
 	// create /tmp-gardener tmpfs mount point:
 	dir_err = system("mkdir -p /tmp-gardener");
-        dir_err = system("mount -t tmpfs -o size=32M tmpfs /tmp-gardener");
+	dir_err = system("umount /tmp-gardener");
+    dir_err = system("mount -t tmpfs -o size=32M,mode=777 tmpfs /tmp-gardener");
         
 	// set permissions:
 	dir_err = system("chmod -R 0777 /tmp-gardener");
@@ -77,10 +78,12 @@ int gardener_init()
 	// set up parameters:
 	clear_gardener_param("battery_percentage");
 	clear_gardener_param("battery_voltage");
-	dir_err = system("chmod -R 0777 /tmp-gardener");
 	
 	// init daemon cmd functionality:
 	gardener_cmd_clear();
+	
+	// make all params 777
+	dir_err = system("chmod -R 777 /tmp-gardener");
 	
 	cout << "init routine complete.\n";
 	return 0;
@@ -173,5 +176,11 @@ void process_gardener_command( gardener_command gc )
         cout.flush();
         dir_err = system("poweroff");
     }
-    	
+ 
+    // check for 'ping' command:
+    if ( gc.command == "ping" )
+    {
+        int dir_err;
+        cout << "ping\n";
+    } 
 }
