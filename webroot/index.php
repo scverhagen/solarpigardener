@@ -10,9 +10,9 @@ Solar Pi Gardener
 <?php
 echo 'Voltage reading: ' . file_get_contents("/tmp-gardener/gardener_battery_voltage") . 'V ( ' . file_get_contents("/tmp-gardener/gardener_battery_percentage") . '% )<br>';
 echo '<hr>';
-echo '<b>Commands:</b><br>';
-echo '<a href="send_command.php?cmd=fanon">Case Fan On</a><br>';
-echo '<a href="send_command.php?cmd=fanoff">Case Fan Off</a>';
+echo '<b>Test Commands:</b><br>';
+echo '<a href="send_command.php?cmd=water_pump_on&args[]=1">Pump water for 1 second</a><br>';
+echo '<a href="send_command.php?cmd=water_pump_on&args[]=5">Pump water for 5 seconds</a><br>';
 ?>
 
 </body>

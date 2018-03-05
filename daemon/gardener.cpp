@@ -2,16 +2,15 @@
 #include <fstream>
 #include <unistd.h>
 #include <string>
+#include <vector>
 #include <sys/stat.h>
 #include <wiringPi.h>
 
 #include "gardener_cmd.h"
 #include "gardener_battery.h"
 #include "gardener_adc.h"
-
-// gpio pin configuration
-#define pin_fan 0
-#define pin_waterpump 2
+#include "gardener_water.h"
+#include "gardener_fan.h"
 
 using std::ifstream;
 using std::ofstream;
@@ -51,23 +50,21 @@ int main(void)
 
 int gardener_init()
 {
-	int dir_err;
 	// init i2c adc interface:
 	cout << "init i2c adc interface...\n";
-	ads1115Setup(MY_PINBASE, 0x48);
+        init_adc();
 
 	// init wiringPi (gpio library)
 	cout << "init wiringPi GPIO library...\n";
 	wiringPiSetup();
 
-	// fan:
-	pinMode(pin_fan, OUTPUT);
-	digitalWrite(pin_fan, LOW);
+        // fan:
+	init_fan();
 	
 	// water pump:
-	pinMode(pin_waterpump, OUTPUT);
-	digitalWrite(pin_waterpump, LOW);
+        init_water_pump();
 
+        int dir_err;
 	// create /tmp-gardener directory:
 	dir_err = system("mkdir -p /tmp-gardener");
 	// set permissions:
@@ -111,9 +108,9 @@ int gardener_loop()
 	//turn fan on if battery percentage >= 100% (battery fully charged)
 	if ( voltage_percentage >= 100 )
 	{
-		digitalWrite(pin_fan, HIGH);
+                gardener_fan_on();
 	} else {
-		digitalWrite(pin_fan, LOW);
+                gardener_fan_off();
 	}
 
 	//get user command (if exists) and process it:
@@ -150,11 +147,11 @@ void clear_gardener_param(string param_name)
 
 void process_gardener_command( gardener_command gc )
 {
-	// check for 'fanon' command:
-	if ( gc.command == "fanon" )
-		digitalWrite(pin_fan, HIGH);
-	
-	if ( gc.command == "fanoff" )
-		digitalWrite(pin_fan, LOW);
+    // check for 'fanon' command:
+    if ( gc.command == "water_pump_on" )
+    {
+        string arg1 = gc.args.front();
+        gardener_water_pump_on( atoi(arg1.c_str() ) );
+    }	
 	
 }

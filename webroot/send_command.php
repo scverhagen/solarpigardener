@@ -20,7 +20,7 @@ if ( !isset($_GET['cmd']) )
 	}
 
 	echo '<b>Command:</b><hr>';
-	echo file_get_contents("/tmp-gardener/gardener.cmd");
+	echo $_GET['cmd'];
 	echo "<hr>";
 	
 	echo '<br>';
