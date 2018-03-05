@@ -65,8 +65,10 @@ int gardener_init()
         init_water_pump();
 
         int dir_err;
-	// create /tmp-gardener directory:
+	// create /tmp-gardener tmpfs mount point:
 	dir_err = system("mkdir -p /tmp-gardener");
+        dir_err = system("mount -t tmpfs -o size=32M tmpfs /tmp-gardener");
+        
 	// set permissions:
 	dir_err = system("chmod -R 0777 /tmp-gardener");
 	// clear left-over files:

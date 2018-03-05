@@ -34,19 +34,19 @@ void gardener_cmd_clear()
     ofs.open ("/tmp-gardener/gardener.cmd", std::ofstream::out | std::ofstream::trunc);
     ofs << 0;
     ofs.close();
-    chmod("/tmp-gardener/gardener.cmd", 0777);
+    chmod("/tmp-gardener/gardener.cmd", 777);
     
     // clear gardener.cmdargcount:
     ofs.open ("/tmp-gardener/gardener.cmdargcount", std::ofstream::out | std::ofstream::trunc);
     ofs << 0;
     ofs.close();
-    chmod("/tmp-gardener/gardener.cmdargcount", 0777);
+    chmod("/tmp-gardener/gardener.cmdargcount", 777);
     
     // clear gardener.cmdargs:
     ofs.open ("/tmp-gardener/gardener.cmdargs", std::ofstream::out | std::ofstream::trunc);
     ofs << 0;
     ofs.close();
-    chmod("/tmp-gardener/gardener.cmdargs", 0777);
+    chmod("/tmp-gardener/gardener.cmdargs", 777);
     
 }
 
