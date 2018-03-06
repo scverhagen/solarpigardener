@@ -6,11 +6,13 @@
 #include <sys/stat.h>
 #include <wiringPi.h>
 
+#include "gardener_param.h"
 #include "gardener_cmd.h"
 #include "gardener_battery.h"
 #include "gardener_adc.h"
 #include "gardener_water.h"
 #include "gardener_fan.h"
+#include "gardener_sensor_moisture.h"
 
 using std::ifstream;
 using std::ofstream;
@@ -29,95 +31,78 @@ void process_gardener_command( gardener_command gc );
 
 int main(void)
 {
-	cout << "Solar Pi Gardener\n";
-	cout << "Background daemon\n";
-	cout << "(C) Steve Verhagen 2018\n\n";
-	if ( getuid() !=0 )
-	{
-		cout << "ERROR:  This program must run as root!\n";
-		return 1;
-	}
+    cout << "Solar Pi Gardener\n";
+    cout << "Background daemon\n";
+    cout << "(C) Steve Verhagen 2018\n\n";
+    if ( getuid() !=0 )
+    {
+            cout << "ERROR:  This program must run as root!\n";
+            return 1;
+    }
 
-	cout << flush;
+    cout << flush;
 
-	// init routine
-	gardener_init();
-	cout << flush;
-	
-	gardener_loop();
-	return 0;
+    // init routine
+    gardener_init();
+    cout << flush;
+
+    gardener_loop();
+    return 0;
 }
 
 int gardener_init()
 {
-	// init i2c adc interface:
-	cout << "init i2c adc interface...\n";
-        init_adc();
+    // init i2c adc interface:
+    cout << "init i2c adc interface...\n";
+    init_adc();
 
-	// init wiringPi (gpio library)
-	cout << "init wiringPi GPIO library...\n";
-	wiringPiSetup();
+    // init wiringPi (gpio library)
+    cout << "init wiringPi GPIO library...\n";
+    wiringPiSetup();
 
-        // fan:
-	init_fan();
-	
-	// water pump:
-        init_water_pump();
+    // init sections:
+    init_battery();
+    init_fan();
+    init_water_pump();
 
-        int dir_err;
-	// create /tmp-gardener tmpfs mount point:
-	dir_err = system("mkdir -p /tmp-gardener");
-	dir_err = system("umount /tmp-gardener");
+    int dir_err;
+    // create /tmp-gardener tmpfs mount point:
+    dir_err = system("mkdir -p /tmp-gardener");
+    dir_err = system("umount /tmp-gardener");
     dir_err = system("mount -t tmpfs -o size=32M,mode=777 tmpfs /tmp-gardener");
-        
-	// set permissions:
-	dir_err = system("chmod -R 0777 /tmp-gardener");
-	// clear left-over files:
-	dir_err = system("rm /tmp-gardener/*");
-	
-	// set up parameters:
-	clear_gardener_param("battery_percentage");
-	clear_gardener_param("battery_voltage");
-	
-	// init daemon cmd functionality:
-	gardener_cmd_clear();
-	
-	// make all params 777
-	dir_err = system("chmod -R 777 /tmp-gardener");
-	
-	cout << "init routine complete.\n";
-	return 0;
+
+    // set permissions:
+    dir_err = system("chmod -R 0777 /tmp-gardener");
+    // clear left-over files:
+    dir_err = system("rm /tmp-gardener/*");
+    
+    // init daemon cmd functionality:
+    gardener_cmd_clear();
+
+    // make all params 777
+    dir_err = system("chmod -R 777 /tmp-gardener");
+
+    cout << "init routine complete.\n";
+    return 0;
 }
 
 
 int gardener_loop()
 {
-	gardener_command gc;
-	float voltage;
-	float voltage_percentage;
-	
+    gardener_command gc;
+
     while (1)
     {   
 
 	usleep(1000 * 1000);
 		
-	//write voltage param:
-	voltage = gardener_get_battery_voltage();
-	write_gardener_param("battery_voltage", std::to_string(voltage));
+        // update params:
+        update_params_battery();
+        update_params_moisture_sensor();
 
-	//write voltage percentage param:
-	voltage_percentage = gardener_get_battery_percentage();
-	write_gardener_param("battery_percentage", std::to_string(voltage_percentage));
-
-	//ongoing logic:
-	//turn fan on if battery percentage >= 100% (battery fully charged)
-	if ( voltage_percentage >= 100 )
-	{
-                gardener_fan_on();
-	} else {
-                gardener_fan_off();
-	}
-
+	//ongoing loop logic:
+	do_battery_loop_checks();
+        
 	//get user command (if exists) and process it:
         gc = gardener_cmd_get();
         if ( gc.command_isblank == FALSE )
@@ -130,24 +115,6 @@ int gardener_loop()
 		cout << flush;
 		
     }
-}
-
-int write_gardener_param(string param_name, string param_data)
-{
-	std::ofstream ofs;
-	ofs.open ("/tmp-gardener/gardener_" + param_name );
-	//cout << "writing: " << ROVERSHELL_COMMAND;
-	ofs << param_data;
-	ofs.close();
-	return 0;
-}
-
-void clear_gardener_param(string param_name)
-{
-	write_gardener_param(param_name, std::to_string(0));
-	string param_path = "/tmp-gardener/gardener_" + param_name;
-	chmod(param_path.c_str(), 777);
-	return;
 }
 
 void process_gardener_command( gardener_command gc )
