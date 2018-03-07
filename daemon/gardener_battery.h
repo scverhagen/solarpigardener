@@ -34,18 +34,23 @@ float gardener_get_battery_voltage()
 float gardener_get_battery_percentage(float voltage)
 {
     // float voltage = 0.0;
-    float total_percentage = 0.0;
+    float voltage_percentage = 0.0;
     float capacity_remaining = 0.0;
-    float capacity_percentage = 0.0;
+    //float capacity_percentage = 0.0;
 
     float usable_capacity = battery_voltage_max - voltage_shutdown;
     //voltage = gardener_get_battery_voltage();
 
     capacity_remaining = voltage - voltage_shutdown;
 
-    total_percentage = voltage / battery_voltage_max * 100;
-    capacity_percentage = capacity_remaining / usable_capacity * 100;
-    return capacity_percentage;
+    //total_percentage = voltage / battery_voltage_max * 100;
+    //capacity_percentage = capacity_remaining / usable_capacity * 100;
+    voltage_percentage = capacity_remaining / usable_capacity * 100;
+
+    if ( voltage_percentage > 100 )
+        voltage_percentage = 100;
+
+    return voltage_percentage;
 }
 
 void update_params_battery()
