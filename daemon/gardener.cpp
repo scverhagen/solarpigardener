@@ -14,6 +14,9 @@
 #include "gardener_fan.h"
 #include "gardener_sensor_moisture.h"
 
+#define gardener_loop_delay 15
+
+
 using std::ifstream;
 using std::ofstream;
 using std::string;
@@ -64,6 +67,7 @@ int gardener_init()
     init_battery();
     init_fan();
     init_water_pump();
+    init_moisture_sensor();
 
     int dir_err;
     // create /tmp-gardener tmpfs mount point:
@@ -94,7 +98,7 @@ int gardener_loop()
     while (1)
     {   
 
-	usleep(1000 * 1000);
+	usleep(1000 * ( gardener_loop_delay * 1000 ) );
 		
         // update params:
         update_params_battery();

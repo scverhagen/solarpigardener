@@ -19,13 +19,13 @@
       </toolsSet>
       <compile>
         <compiledirpicklist>
-          <compiledirpicklistitem>.</compiledirpicklistitem>
           <compiledirpicklistitem>${AUTO_FOLDER}</compiledirpicklistitem>
+          <compiledirpicklistitem>.</compiledirpicklistitem>
         </compiledirpicklist>
         <compiledir>${AUTO_FOLDER}</compiledir>
         <compilecommandpicklist>
-          <compilecommandpicklistitem>${MAKE} ${ITEM_NAME}.o</compilecommandpicklistitem>
           <compilecommandpicklistitem>${AUTO_COMPILE}</compilecommandpicklistitem>
+          <compilecommandpicklistitem>${MAKE} ${ITEM_NAME}.o</compilecommandpicklistitem>
         </compilecommandpicklist>
         <compilecommand>${AUTO_COMPILE}</compilecommand>
       </compile>
@@ -49,7 +49,7 @@
           <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
         </runcommandpicklist>
         <runcommand>"${OUTPUT_PATH}"</runcommand>
-        <rundir>.</rundir>
+        <rundir></rundir>
         <buildfirst>false</buildfirst>
         <terminal-type>0</terminal-type>
         <remove-instrumentation>0</remove-instrumentation>
