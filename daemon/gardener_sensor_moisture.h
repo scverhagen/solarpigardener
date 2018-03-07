@@ -1,6 +1,7 @@
 #pragma once
 
 #define adc_ch_moisture ch1
+#define gardener_moisture_sensor_calibration_factor 2.5
 
 #include "gardener_param.h"
 
@@ -14,7 +15,7 @@ void update_params_moisture_sensor();
 float gardener_get_moisture_sensor_value()
 {
 	float moisture_avalue = 0.0;
-	moisture_avalue = analogRead(adc_ch_moisture);
+	moisture_avalue = analogRead(adc_ch_moisture) * gardener_moisture_sensor_calibration_factor;
 	
 	return moisture_avalue;
 }

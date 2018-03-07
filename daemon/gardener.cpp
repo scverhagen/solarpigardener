@@ -98,8 +98,6 @@ int gardener_loop()
     while (1)
     {   
 
-	usleep(1000 * ( gardener_loop_delay * 1000 ) );
-		
         // update params:
         update_params_battery();
         update_params_moisture_sensor();
@@ -116,8 +114,9 @@ int gardener_loop()
             process_gardener_command(gc);
         }		
 		
-		cout << flush;
-		
+        cout << flush;
+                
+        usleep(1000 * ( gardener_loop_delay * 1000 ) );
     }
 }
 
