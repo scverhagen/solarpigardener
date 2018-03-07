@@ -13,8 +13,11 @@
 #include "gardener_water.h"
 #include "gardener_fan.h"
 #include "gardener_sensor_moisture.h"
+#include "gardener_plants.h"
+#include "gardener_sched.h"
 
 #define gardener_loop_delay 15
+#define gardener_plant plant_tomato // set plant type here
 
 
 using std::ifstream;
@@ -23,14 +26,16 @@ using std::string;
 using std::cout;
 using std::flush;
 
+// functions:
 int main(void);
 int gardener_init();
 int gardener_loop();
-
 int write_gardener_param(string param_name, string param_data);
 void clear_gardener_param(string param_name);
-
 void process_gardener_command( gardener_command gc );
+
+// globals:
+plant thisplant;
 
 int main(void)
 {
@@ -68,6 +73,7 @@ int gardener_init()
     init_fan();
     init_water_pump();
     init_moisture_sensor();
+    init_plants();
 
     int dir_err;
     // create /tmp-gardener tmpfs mount point:
@@ -86,6 +92,9 @@ int gardener_init()
     // make all params 777
     dir_err = system("chmod -R 777 /tmp-gardener");
 
+    // populate thisplant:
+    thisplant = gardener_plant;
+    
     cout << "init routine complete.\n";
     return 0;
 }
@@ -101,9 +110,13 @@ int gardener_loop()
         // update params:
         update_params_battery();
         update_params_moisture_sensor();
-
+        update_params_plants(&thisplant);
+        
 	//ongoing loop logic:
 	do_battery_loop_checks();
+        
+        //scheduler:
+        gardener_check_schedule(&thisplant);
         
 	//get user command (if exists) and process it:
         gc = gardener_cmd_get();

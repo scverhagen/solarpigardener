@@ -1,6 +1,7 @@
 #pragma once
 
 #define pin_water_pump 2
+#define gardener_water_duration 15
 
 void init_water_pump(void);
 void gardener_water_pump_on(int duration);
@@ -14,8 +15,8 @@ void init_water_pump(void)
 
 void gardener_water_pump_on(int duration)
 {
-    cout << "Pumping water for " << duration << " second(s)...";
-    cout.flush();
+    //cout << "Pumping water for " << duration << " second(s)...";
+    //cout.flush();
     
     digitalWrite(pin_water_pump, HIGH);
     usleep(1000 * 1000 * duration);

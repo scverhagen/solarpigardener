@@ -7,6 +7,10 @@
       <in>gardener_battery.h</in>
       <in>gardener_cmd.h</in>
       <in>gardener_fan.h</in>
+      <in>gardener_param.h</in>
+      <in>gardener_plants.h</in>
+      <in>gardener_sched.h</in>
+      <in>gardener_sensor_moisture.h</in>
       <in>gardener_water.h</in>
     </df>
   </logicalFolder>
@@ -19,13 +23,13 @@
       </toolsSet>
       <compile>
         <compiledirpicklist>
-          <compiledirpicklistitem>${AUTO_FOLDER}</compiledirpicklistitem>
           <compiledirpicklistitem>.</compiledirpicklistitem>
+          <compiledirpicklistitem>${AUTO_FOLDER}</compiledirpicklistitem>
         </compiledirpicklist>
         <compiledir>${AUTO_FOLDER}</compiledir>
         <compilecommandpicklist>
-          <compilecommandpicklistitem>${AUTO_COMPILE}</compilecommandpicklistitem>
           <compilecommandpicklistitem>${MAKE} ${ITEM_NAME}.o</compilecommandpicklistitem>
+          <compilecommandpicklistitem>${AUTO_COMPILE}</compilecommandpicklistitem>
         </compilecommandpicklist>
         <compilecommand>${AUTO_COMPILE}</compilecommand>
       </compile>
