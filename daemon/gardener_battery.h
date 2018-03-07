@@ -7,7 +7,7 @@
 #include "gardener_fan.h"
 
 float gardener_get_battery_voltage();
-float gardener_get_battery_percentage();
+float gardener_get_battery_percentage(float voltage);
 void update_params_battery();
 void do_battery_loop_checks();
 void init_battery();
@@ -31,15 +31,15 @@ float gardener_get_battery_voltage()
     return vin;
 }
 
-float gardener_get_battery_percentage()
+float gardener_get_battery_percentage(float voltage)
 {
-    float voltage = 0.0;
+    // float voltage = 0.0;
     float total_percentage = 0.0;
     float capacity_remaining = 0.0;
     float capacity_percentage = 0.0;
 
     float usable_capacity = battery_voltage_max - voltage_shutdown;
-    voltage = gardener_get_battery_voltage();
+    //voltage = gardener_get_battery_voltage();
 
     capacity_remaining = voltage - voltage_shutdown;
 
@@ -58,14 +58,16 @@ void update_params_battery()
     write_gardener_param("battery_voltage", std::to_string(voltage));
 
     //write voltage percentage param:
-    voltage_percentage = gardener_get_battery_percentage();
+    voltage_percentage = gardener_get_battery_percentage(voltage);
     write_gardener_param("battery_percentage", std::to_string(voltage_percentage));
 }
 
 void do_battery_loop_checks()
 {
+    float voltage = gardener_get_battery_voltage();
+
     float voltage_percentage;
-    voltage_percentage = gardener_get_battery_percentage();
+    voltage_percentage = gardener_get_battery_percentage(voltage);
     
     //turn fan on if battery percentage >= 100% (battery fully charged)
     if ( voltage_percentage >= 100 )
