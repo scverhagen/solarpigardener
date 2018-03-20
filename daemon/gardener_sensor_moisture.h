@@ -1,7 +1,7 @@
 #pragma once
 
 #define adc_ch_moisture ch1
-#define gardener_moisture_sensor_calibration_factor 2.13
+#define gardener_moisture_sensor_calibration_factor 1
 
 #include "gardener_param.h"
 

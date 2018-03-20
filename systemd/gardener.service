@@ -1,0 +1,10 @@
+[Unit]
+Description=Solar Pi Gardener Service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/gardener
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target

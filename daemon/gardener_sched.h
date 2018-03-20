@@ -14,7 +14,6 @@ void gardener_check_schedule( plant * thisplant )
     time (&rawtime);
     timeinfo = localtime (&rawtime);
     
-/*
     // check to see if the time is 00:00, 06:00, 12:00, or 18:00:
     bool isQD = ( (timeinfo->tm_hour % 6) == 0 );
     if ( isQD = FALSE )
@@ -25,9 +24,11 @@ void gardener_check_schedule( plant * thisplant )
     // make sure that this is a new quarter day:
     if ( thisQ == lastQ )
         return;
-*/    
+
     // it is the first "tick" since the latest quarter hour
     // do plant maintenance task:
+    cout << "New scheduling quarter entered:  "  << thisQ << " from " << lastQ << ".\n";
+    lastQ = thisQ;
     gardener_plant_do_maint(thisplant);
     
 }
