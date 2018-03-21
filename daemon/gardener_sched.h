@@ -25,7 +25,7 @@ void gardener_check_schedule( plant * thisplant )
     if ( thisQ == lastQ )
         return;
 
-    // it is the first "tick" since the latest quarter hour
+    // it is the first "tick" since the latest quarter day
     // do plant maintenance task:
     cout << "New scheduling quarter entered:  "  << thisQ << " from " << lastQ << ".\n";
     lastQ = thisQ;

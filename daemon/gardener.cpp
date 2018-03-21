@@ -16,7 +16,8 @@
 #include "gardener_plants.h"
 #include "gardener_sched.h"
 
-#define gardener_loop_delay 900 // 15 mins
+#define gardener_tick_min_max 60 // 1 hour (in minutes)
+
 #define gardener_plant plant_tomato // set plant type here
 
 
@@ -36,6 +37,8 @@ void process_gardener_command( gardener_command gc );
 
 // globals:
 plant thisplant;
+long tick_sec;
+long tick_min;
 
 int main(void)
 {
@@ -68,6 +71,10 @@ int gardener_init()
     cout << "init wiringPi GPIO library...\n";
     wiringPiSetup();
 
+    // tick functionality:
+    tick_sec = 0;
+    tick_min = 0;
+    
     // init sections:
     init_battery();
     init_fan();
@@ -109,7 +116,9 @@ int gardener_loop()
 
         // update params:
         update_params_battery();
-        update_params_moisture_sensor();
+        if ( tick_min == 0 && tick_sec == 0 )
+            update_params_moisture_sensor();
+        
         update_params_plants(&thisplant);
         
 	//ongoing loop logic:
@@ -129,7 +138,20 @@ int gardener_loop()
 		
         cout << flush;
                 
-        usleep(1000 * ( gardener_loop_delay * 1000 ) );
+        usleep(1000 * ( (1) * 1000 ) );
+        
+        tick_sec++;
+        if ( tick_sec == 59 )
+        {
+            tick_sec = 0;
+            tick_min++;
+        }
+        if ( tick_min == gardener_tick_min_max )
+        {
+            tick_min = 0;
+        }
+        //cout << "m" << tick_min << "s" << tick_sec << "\n";
+        cout.flush();
     }
 }
 
@@ -165,5 +187,21 @@ void process_gardener_command( gardener_command gc )
     {
         int dir_err;
         cout << "ping\n";
-    } 
+    }
+    
+    // check for 'check_moisture' command:
+    if ( gc.command == "check_moisture" )
+    {
+        int dir_err;
+        update_params_moisture_sensor();
+        cout << "Moisture param updated.\n";
+    }
+    
+    // check for 'kill_process' command:
+    if ( gc.command == "kill_process" )
+    {
+        int dir_err;
+        cout << "Killing Process.\n";
+        exit(1);
+    }
 }
