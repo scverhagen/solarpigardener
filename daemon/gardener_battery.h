@@ -25,7 +25,7 @@ float gardener_get_battery_voltage()
     // vin = vout / (R2/(R1+R2));
     // vin -= 1.6; // misc adjustment
 
-    vin = (analogRead(ch0) / 32767.0 * 24.0) - 2.4;
+    vin = (analogRead(ch0) / 32767.0 * 24.0) - 2.5;
     // voltage = analogRead(ch0) / 4.092;
 
     return vin;
