@@ -1,5 +1,6 @@
 #pragma once
 
+#define pin_moisture_sensor 29
 #define adc_ch_moisture ch1
 #define gardener_moisture_sensor_calibration_factor 1
 
@@ -28,7 +29,19 @@ float gardener_get_moisture_sensor_percentage( float adcval )
 float gardener_get_moisture_sensor_percentage()
 {
 	float adcval = 0.0;
+        
+        // power on moisture sensor
+        digitalWrite(pin_moisture_sensor, HIGH);
+        
+        // delay 5 sec:
+        usleep(1000 * ( 5 * 1000 ) );
+        
+        // get reading
 	adcval = gardener_get_moisture_sensor_value();
+        
+        // turn moisture sensor back OFF:
+        digitalWrite(pin_moisture_sensor, LOW);
+        
 	return (adcval * 100 / 32767.0);
 }
 
@@ -49,4 +62,9 @@ void init_moisture_sensor()
     // set up parameters:
     clear_gardener_param("moisture_sensor_value");
     clear_gardener_param("moisture_sensor_percentage");
+    
+    // set up gpio pin mode
+    pinMode(pin_moisture_sensor, OUTPUT);
+    // make sure it is OFF
+    digitalWrite(pin_moisture_sensor, LOW);
 }

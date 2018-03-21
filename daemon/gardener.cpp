@@ -16,7 +16,7 @@
 #include "gardener_plants.h"
 #include "gardener_sched.h"
 
-#define gardener_loop_delay 15
+#define gardener_loop_delay 900 // 15 mins
 #define gardener_plant plant_tomato // set plant type here
 
 
