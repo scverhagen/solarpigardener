@@ -38,6 +38,7 @@ float gardener_get_moisture_sensor_percentage()
         
         // get reading
 	adcval = gardener_get_moisture_sensor_value();
+        //cout << adcval;
         
         // turn moisture sensor back OFF:
         digitalWrite(pin_moisture_sensor, LOW);
