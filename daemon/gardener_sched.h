@@ -30,5 +30,6 @@ void gardener_check_schedule( plant * thisplant )
     cout << "New scheduling quarter entered:  "  << thisQ << " from " << lastQ << ".\n";
     lastQ = thisQ;
     gardener_plant_do_maint(thisplant);
+    cout << "Schedule completed.\n";
     
 }

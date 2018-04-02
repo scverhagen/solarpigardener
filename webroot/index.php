@@ -17,6 +17,7 @@ echo 'Automatically watering plant if soil moisture percentage drops below ' . f
 echo '<hr>';
 echo '<b>Test Commands:</b><br>';
 echo '<a href="send_command.php?cmd=check_moisture">Force update of moisture param</a><br>';
+echo '<a href="send_command.php?cmd=do_maint">Force plant maintenance</a><br>';
 echo '<a href="send_command.php?cmd=water_pump_on&args[]=5">Pump water for 5 seconds</a><br>';
 echo '<br>';
 echo '<a href="send_command.php?cmd=ping">Send ping command</a><br>';

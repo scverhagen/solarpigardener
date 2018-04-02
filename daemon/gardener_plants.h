@@ -54,7 +54,7 @@ void gardener_plant_do_maint(plant* thisplant)
         int i = 0;
         for ( int i = 0; i < 3; ++i )
         {
-            cout << "Attempt #" << i <<  ":  Watering...;";
+            cout << "Attempt #" << (i + 1) <<  ":  Watering...;";
             cout.flush();
             gardener_water_pump_on(gardener_water_duration);
             cout << "done.\n";

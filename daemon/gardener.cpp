@@ -196,6 +196,14 @@ void process_gardener_command( gardener_command gc )
         update_params_moisture_sensor();
         cout << "Moisture param updated.\n";
     }
+
+    // check for 'do_maint' command:
+    if ( gc.command == "do_maint" )
+    {
+        gardener_plant_do_maint(&thisplant);
+        cout << "Forcing plant maintenance.\n";
+    }
+
     
     // check for 'kill_process' command:
     if ( gc.command == "kill_process" )

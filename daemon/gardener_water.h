@@ -1,7 +1,7 @@
 #pragma once
 
 #define pin_water_pump 2
-#define gardener_water_duration 15
+#define gardener_water_duration 10
 
 void init_water_pump(void);
 void gardener_water_pump_on(int duration);
