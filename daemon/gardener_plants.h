@@ -12,7 +12,7 @@ public:
 
 static struct plant plant_tomato = {
     .name = "tomato",
-    .soil_min_moisture_percentage = 25,
+    .soil_min_moisture_percentage = 20,
 };
 
 // functions:

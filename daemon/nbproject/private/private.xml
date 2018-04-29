@@ -7,7 +7,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group name="solarpigardener">
+            <file>file://solarpi.lan/solarpigardener/daemon/gardener_sched.h</file>
             <file>file://solarpi.lan/solarpigardener/daemon/gardener_battery.h</file>
+            <file>file://solarpi.lan/solarpigardener/daemon/gardener_cmd.h</file>
             <file>file://solarpi.lan/solarpigardener/daemon/gardener_plants.h</file>
             <file>file://solarpi.lan/solarpigardener/daemon/gardener_water.h</file>
             <file>file://solarpi.lan/solarpigardener/daemon/gardener.cpp</file>
