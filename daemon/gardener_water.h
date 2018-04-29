@@ -1,5 +1,7 @@
 #pragma once
 
+#include "gardener_fan.h"
+
 #define pin_water_pump 2
 #define gardener_water_duration 5
 
@@ -18,6 +20,10 @@ void gardener_water_pump_on(int duration)
     //cout << "Pumping water for " << duration << " second(s)...";
     //cout.flush();
     
+    // turn fan off before pumping water:
+    gardener_fan_off();
+    usleep(1000 * 1000 * .5);
+            
     digitalWrite(pin_water_pump, HIGH);
     usleep(1000 * 1000 * duration);
     gardener_water_pump_off();
