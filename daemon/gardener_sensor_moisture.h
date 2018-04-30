@@ -15,8 +15,18 @@ void update_params_moisture_sensor();
 
 float gardener_get_moisture_sensor_value()
 {
-	float moisture_avalue = 0.0;
+
+        // power on moisture sensor
+        digitalWrite(pin_moisture_sensor, HIGH);
+        
+        // delay 5 sec:
+        usleep(1000 * ( 5 * 1000 ) );
+
+        float moisture_avalue = 0.0;
 	moisture_avalue = analogRead(adc_ch_moisture) * gardener_moisture_sensor_calibration_factor;
+
+        // turn moisture sensor back OFF:
+        digitalWrite(pin_moisture_sensor, LOW);
 	
 	return moisture_avalue;
 }
@@ -30,18 +40,9 @@ float gardener_get_moisture_sensor_percentage()
 {
 	float adcval = 0.0;
         
-        // power on moisture sensor
-        digitalWrite(pin_moisture_sensor, HIGH);
-        
-        // delay 5 sec:
-        usleep(1000 * ( 5 * 1000 ) );
-        
         // get reading
 	adcval = gardener_get_moisture_sensor_value();
         //cout << adcval;
-        
-        // turn moisture sensor back OFF:
-        digitalWrite(pin_moisture_sensor, LOW);
         
 	return (adcval * 100 / 32767.0);
 }

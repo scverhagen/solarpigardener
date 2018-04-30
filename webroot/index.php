@@ -21,6 +21,8 @@ echo '<a href="send_command.php?cmd=do_maint">Force plant maintenance</a><br>';
 echo '<a href="send_command.php?cmd=water_pump_on&args[]=5">Pump water for 5 seconds</a><br>';
 echo '<br>';
 echo '<a href="send_command.php?cmd=ping">Send ping command</a><br>';
+echo '<hr>';
+echo '<a href="syslog.php">View syslog</a><br>';
 echo '<br>';
 echo '<a href="send_command.php?cmd=system_reboot">Reboot system</a><br>';
 ?>
