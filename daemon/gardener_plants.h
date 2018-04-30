@@ -60,8 +60,8 @@ void gardener_plant_do_maint(plant* thisplant)
             cout << "done.\n";
             cout << "Waiting 5 seconds...";
             cout.flush();
-            // wait 5 seconds for water to settle:
-            usleep(1000 * ( (5) * 1000 ) );
+            // wait 10 seconds for water to settle:
+            usleep(1000 * ( (10) * 1000 ) );
             cout << "done.\n";
             cout.flush();
             // get new moisture reading

@@ -16,10 +16,9 @@ echo '<b>Plant Monitor - ' . file_get_contents("/tmp-gardener/gardener_plant_nam
 echo 'Automatically watering plant if soil moisture percentage drops below ' . file_get_contents("/tmp-gardener/gardener_plant_soil_min_moisture_percentage") . '%<br>';
 echo '<hr>';
 echo '<b>Test Commands:</b><br>';
-echo '<a href="send_command.php?cmd=check_moisture">Force update of moisture param</a><br>';
-echo '<a href="send_command.php?cmd=do_maint">Force plant maintenance</a><br>';
-echo '<a href="send_command.php?cmd=water_pump_on&args[]=5">Pump water for 5 seconds</a><br>';
-echo '<br>';
+echo '<a href="send_command.php?cmd=check_moisture">Force update of moisture param</a><br><br>';
+echo '<a href="send_command.php?cmd=do_maint">Force plant maintenance</a><br><br>';
+echo '<a href="send_command.php?cmd=water_pump_on&args[]=5">Pump water for 5 seconds</a><br><br>';
 echo '<a href="send_command.php?cmd=ping">Send ping command</a><br>';
 echo '<hr>';
 echo '<a href="syslog.php">View syslog</a><br>';
