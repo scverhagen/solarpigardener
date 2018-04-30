@@ -16,11 +16,15 @@ void update_params_moisture_sensor();
 float gardener_get_moisture_sensor_value()
 {
 
+        // turn fan off before enabling moisture sensor:
+        gardener_fan_off();
+        usleep(1000 * 1000 * .5);
+    
         // power on moisture sensor
         digitalWrite(pin_moisture_sensor, HIGH);
         
-        // delay 5 sec:
-        usleep(1000 * ( 5 * 1000 ) );
+        // delay 2 sec:
+        usleep(1000 * ( 2 * 1000 ) );
 
         float moisture_avalue = 0.0;
 	moisture_avalue = analogRead(adc_ch_moisture) * gardener_moisture_sensor_calibration_factor;
