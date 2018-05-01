@@ -90,6 +90,7 @@ int gardener_init()
 
     // set permissions:
     dir_err = system("chmod -R 0777 /tmp-gardener");
+    dir_err = system("chmod 0775 /var/log/syslog");
     // clear left-over files:
     dir_err = system("rm /tmp-gardener/*");
     
