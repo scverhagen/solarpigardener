@@ -2,7 +2,7 @@
 
 #include "gardener_plants.h"
 
-static int lastQ;
+static int lastHour;
 
 void gardener_check_schedule( plant * thisplant );
 
@@ -14,22 +14,21 @@ void gardener_check_schedule( plant * thisplant )
     time (&rawtime);
     timeinfo = localtime (&rawtime);
     
-    // check to see if the time is 00:00, 06:00, 12:00, or 18:00:
-    bool isQD = ( (timeinfo->tm_hour % 6) == 0 );
-    if ( isQD = FALSE )
-        return;
+    int thisHour = timeinfo->tm_hour;
     
-    int thisQ = (timeinfo->tm_hour / 6) + 1;
-    
-    // make sure that this is a new quarter day:
-    if ( thisQ == lastQ )
+    // make sure that this is a new hour:
+    if ( thisHour == lastHour )
         return;
 
     // it is the first "tick" since the latest quarter day
     // do plant maintenance task:
-    cout << "New scheduling quarter entered:  "  << thisQ << " from " << lastQ << ".\n";
-    lastQ = thisQ;
-    gardener_plant_do_maint(thisplant);
-    cout << "Schedule completed.\n";
+    cout << "(gardener_check_schedule) New hour entered:  "  << thisHour << ":00 from " << lastHour << ":00.\n";
+    lastHour = thisHour;
+    if (thisHour == thisplant->sched_hour)
+    {
+        cout << "(gardener_check_schedule) It's " << thisHour << ":00.  Watering " << thisplant->name << " plant.\n";
+        gardener_plant_do_maint(thisplant);
+    }
+    
     
 }

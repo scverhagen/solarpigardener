@@ -201,8 +201,9 @@ void process_gardener_command( gardener_command gc )
     // check for 'do_maint' command:
     if ( gc.command == "do_maint" )
     {
-        gardener_plant_do_maint(&thisplant);
         cout << "Forcing plant maintenance.\n";
+        cout.flush();
+        gardener_plant_do_maint(&thisplant);
     }
 
     
