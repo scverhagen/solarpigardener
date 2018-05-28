@@ -15,5 +15,10 @@
             <file>file://solarpi.lan/solarpigardener/daemon/gardener_water.h</file>
             <file>file://solarpi.lan/solarpigardener/daemon/gardener.cpp</file>
         </group>
+        <group>
+            <file>file:/run/user/1000/gvfs/smb-share:server=solarpi.lan,share=solarpigardener/daemon/gardener.cpp</file>
+            <file>file:/run/user/1000/gvfs/smb-share:server=solarpi.lan,share=solarpigardener/daemon/gardener_sched.h</file>
+            <file>file:/run/user/1000/gvfs/smb-share:server=solarpi.lan,share=solarpigardener/daemon/gardener_plants.h</file>
+        </group>
     </open-files>
 </project-private>

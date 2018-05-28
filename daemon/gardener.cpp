@@ -6,6 +6,7 @@
 #include <sys/stat.h>
 #include <wiringPi.h>
 
+#include "gardener_settings.h"
 #include "gardener_param.h"
 #include "gardener_cmd.h"
 #include "gardener_battery.h"
@@ -13,7 +14,6 @@
 #include "gardener_water.h"
 #include "gardener_fan.h"
 #include "gardener_sensor_moisture.h"
-#include "gardener_plants.h"
 #include "gardener_sched.h"
 
 #define gardener_tick_min_max 60 // 1 hour (in minutes)
@@ -36,7 +36,8 @@ void clear_gardener_param(string param_name);
 void process_gardener_command( gardener_command gc );
 
 // globals:
-plant thisplant;
+gardener_settings_provider gardener_settings;
+//plant thisplant;
 long tick_sec;
 long tick_min;
 
@@ -75,12 +76,15 @@ int gardener_init()
     tick_sec = 0;
     tick_min = 0;
     
+    // init_settings:
+    gardener_settings.load_settings();
+    gardener_settings.init_params();
+    
     // init sections:
     init_battery();
     init_fan();
     init_water_pump();
     init_moisture_sensor();
-    init_plants();
 
     int dir_err;
     // create /tmp-gardener tmpfs mount point:
@@ -100,9 +104,6 @@ int gardener_init()
     // make all params 777
     dir_err = system("chmod -R 777 /tmp-gardener");
 
-    // populate thisplant:
-    thisplant = gardener_plant;
-    
     cout << "init routine complete.\n";
     return 0;
 }
@@ -120,13 +121,13 @@ int gardener_loop()
         if ( tick_min == 0 && tick_sec == 0 )
             update_params_moisture_sensor();
         
-        update_params_plants(&thisplant);
+        gardener_settings.update_params();
         
 	//ongoing loop logic:
 	do_battery_loop_checks();
         
         //scheduler:
-        gardener_check_schedule(&thisplant);
+        gardener_check_schedule(&gardener_settings);
         
 	//get user command (if exists) and process it:
         gc = gardener_cmd_get();
@@ -201,9 +202,9 @@ void process_gardener_command( gardener_command gc )
     // check for 'do_maint' command:
     if ( gc.command == "do_maint" )
     {
-        cout << "Forcing plant maintenance.\n";
+        cout << "Forcing maintenance.\n";
         cout.flush();
-        gardener_plant_do_maint(&thisplant);
+        gardener_do_maint(&gardener_settings);
     }
 
     

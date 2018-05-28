@@ -8,9 +8,9 @@
       <in>gardener_cmd.h</in>
       <in>gardener_fan.h</in>
       <in>gardener_param.h</in>
-      <in>gardener_plants.h</in>
       <in>gardener_sched.h</in>
       <in>gardener_sensor_moisture.h</in>
+      <in>gardener_settings.h</in>
       <in>gardener_water.h</in>
     </df>
   </logicalFolder>
