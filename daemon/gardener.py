@@ -1,48 +1,18 @@
+import os
 import gpiozero
 
-gardener_tick_min_max = 60 // 1 hour (in minutes)
-
-import os
-
-// functions:
-int main(void);
-int gardener_init();
-int gardener_loop();
-int write_gardener_param(string param_name, string param_data);
-void clear_gardener_param(string param_name);
-void process_gardener_command( gardener_command gc );
-
-// globals:
-gardener_settings_provider gardener_settings;
-//plant thisplant;
-long tick_sec;
-long tick_min;
-
-int main(void)
-{
-    cout << "Solar Pi Gardener\n";
-    cout << "Background daemon\n";
-    cout << "(C) Steve Verhagen 2018\n\n";
-    if ( getuid() !=0 )
-    {
-            cout << "ERROR:  This program must run as root!\n";
-            return 1;
-    }
-
-    cout << flush;
-
-    // init routine
-    gardener_init();
-    cout << flush;
-
-    gardener_loop();
-    return 0;
-}
-
 def gardener_init():
+    print("Solar Pi Gardener")
+    print("Background daemon")
+    print("(C) Steve Verhagen 2019")
+
     # init i2c adc interface:
     print ("init i2c adc interface...")
     init_adc();
+    
+    if os.getuid() !=0:
+        print("This program must run as root!")
+        return 1;
 
     # init wiringPi (gpio library)
     print("init wiringPi GPIO library...")
@@ -83,7 +53,6 @@ def gardener_init():
     print("init routine complete.")
 
 
-
 def gardener_loop():
     gc = gardener_command()
 
@@ -99,81 +68,41 @@ def gardener_loop():
 	    #do_battery_loop_checks()
         
         #scheduler:
-        gardener_check_schedule(gardener_settings)
+        gardener_check_schedule()
         
 	    #get user command (if exists) and process it:
         gc = gardener_cmd_get()
-        if ( gc.command_isblank == False ):
+        if ( gc != None ):
             print("Process command:  " + gc.command)
             print("Arg count: " + gc.argcount)
             process_gardener_command(gc)
-                
-        #usleep(1000 * ( (1) * 1000 ) );
-        
-        tick_sec += 1
-        if ( tick_sec == 59 ):
-            tick_sec = 0;
-            tick_min += 1
-        if ( tick_min == gardener_tick_min_max ):
-            tick_min = 0
-        cout.flush()
 
-void process_gardener_command( gardener_command gc )
-{
-    // check for 'water_pump_on' command:
-    if ( gc.command == "water_pump_on" )
-    {
-        string arg1 = gc.args.front();
-        gardener_water_pump_on( atoi(arg1.c_str() ) );
-    }
+def process_gardener_command(gc):
+    args = gc.split()
+    largs = gc.lower().split()
     
-    // check for 'system_reboot' command:
-    if ( gc.command == "system_reboot" )
-    {
-        int dir_err;
-        cout << "Rebooting system...\n";
-        cout.flush();
-        dir_err = system("reboot");
-    }
+    if largs[0] == 'water_pump_on':
+        gardener_water_pump_on( args[1] )
+    elif largs[0] == "system_reboot":
+        print('Rebooting system...')
+        os.system("reboot")
+    elif largs[0] == "system_poweroff":
+        print('Powering system OFF...')
+        os.system("poweroff");
+    elif largs[0] == "ping":
+        print('ping')
+    elif largs[0] == "check_moisture":
+        update_params_moisture_sensor()
+        print("Moisture param updated.")
+    elif largs[0] == 'do_maint':
+        print("Forcing maintenance.")
+        gardener_do_maint();
+    elif largs[0] == "kill_process":
+        print("Killing Process.")
+        return 1
 
-    // check for 'system_poweroff' command:
-    if ( gc.command == "system_poweroff" )
-    {
-        int dir_err;
-        cout << "Powering system OFF...\n";
-        cout.flush();
-        dir_err = system("poweroff");
-    }
- 
-    // check for 'ping' command:
-    if ( gc.command == "ping" )
-    {
-        int dir_err;
-        cout << "ping\n";
-    }
-    
-    // check for 'check_moisture' command:
-    if ( gc.command == "check_moisture" )
-    {
-        int dir_err;
-        update_params_moisture_sensor();
-        cout << "Moisture param updated.\n";
-    }
-
-    // check for 'do_maint' command:
-    if ( gc.command == "do_maint" )
-    {
-        cout << "Forcing maintenance.\n";
-        cout.flush();
-        gardener_do_maint(&gardener_settings);
-    }
-
-    
-    // check for 'kill_process' command:
-    if ( gc.command == "kill_process" )
-    {
-        int dir_err;
-        cout << "Killing Process.\n";
-        exit(1);
-    }
-}
+if __name__ == '__main__':
+    if gardener_init() == 0:
+        gardener_loop();
+    else:
+        print('Init failed.  Daemon not started.')
