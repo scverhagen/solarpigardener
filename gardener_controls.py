@@ -21,20 +21,14 @@ class water_pump(object):
     def Off(self):
         self.state = 0
         self.solenoid.off()
-        
-    def Toggle(self):
-        if self.state == 0:
-            self.state = 1
-            self.on()
-        else:
-            self.state = 0
-            self.off()
-            
+                    
     def water_for(self, secs):
         pid = os.fork()
-        if pid != 0:
+        if pid == 0:
             # child process:
             self.solenoid.on()
             time.sleep(secs)
             self.solenoid.off()
-            sys.exit(0)
+            os._exit(0)
+            
+            

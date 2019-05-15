@@ -3,7 +3,7 @@ Description=Solar Pi Gardener Service
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/gardener
+ExecStart=/var/www/html/solarpigardener/gardener_daemon.py
 Restart=on-abort
 
 [Install]

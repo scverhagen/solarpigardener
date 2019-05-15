@@ -1,7 +1,22 @@
+#!/usr/bin/python3
+
 import os
+import sys
+import time
 import gpiozero
 
 import gardener_controls
+import gardener_fifo
+
+command_fifo = gardener_fifo.command_fifo()
+status_fifo = gardener_fifo.status_fifo()
+
+control_waterpump = gardener_controls.water_pump()
+#sensor_moisture = gardener_controls.moisture_sensor()
+
+status_dict = {'bat_voltage': 0, 'bat_status':'na', 'moisture_reading': 0, 'uptime': 0}
+
+start_time = time.time()
 
 def gardener_init():
     print("Solar Pi Gardener")
@@ -9,8 +24,8 @@ def gardener_init():
     print("(C) Steve Verhagen 2019")
 
     # init i2c adc interface:
-    print ("init i2c adc interface...")
-    init_adc();
+    #print ("init i2c adc interface...")
+    #init_adc();
     
     if os.getuid() !=0:
         print("This program must run as root!")
@@ -19,65 +34,37 @@ def gardener_init():
     # init_settings:
 #    gardener_settings.load_settings();
 #    gardener_settings.init_params();
-    
-    # init sections:
-    control_waterpump = gardener_controls.water_pump()
-    sensor_moisture = gardener_controls.moisture_sensor()
-
-    # create /tmp-gardener tmpfs mount point:
-    os.system("mkdir -p /tmp-gardener")
-    os.system("umount /tmp-gardener")
-    os.system("mount -t tmpfs -o size=32M,mode=777 tmpfs /tmp-gardener")
-
-    # set permissions:
-    os.system("chmod -R 0777 /tmp-gardener")
-    os.system("chmod 0775 /var/log/syslog")
-    
-    # clear left-over files:
-    os.system("rm /tmp-gardener/*")
-    
-    # init daemon cmd functionality:
-    gardener_cmd_clear()
-
-    # make all params 777
-    os.system("chmod -R 777 /tmp-gardener")
 
     print("init routine complete.")
+    return 0
 
-lasttime = 0
+last_time = 0
 def gardener_loop():
     while (1):
-        newtime = time.time()
+        new_time = time.time()
     
-        gc = gardener_command()
-
-    
-        #update params:
-        update_params_battery();
-        if ( tick_min == 0 and tick_sec == 0 ):
-            update_params_moisture_sensor()
+        #get user command (if exists) and process it:        
+        gc = command_fifo.checkforcommand()
         
-        gardener_settings.update_params()
-        
-	    #ongoing loop logic:
-	    #do_battery_loop_checks()
-        
-        #scheduler:
-        gardener_check_schedule()
-        
-	    #get user command (if exists) and process it:
-        gc = gardener_cmd_get()
-        if ( gc != None ):
-            print("Process command:  " + gc.command)
-            print("Arg count: " + gc.argcount)
+        if ( gc != '' ):
+            print("Process command:  " + gc)
             process_gardener_command(gc)
+            
+        # update status
+        status_dict['uptime'] = round(new_time - start_time, 1)
+        status_fifo.setstatusdict(status_dict)
+        
+        last_time = new_time
+        time.sleep(1)
 
 def process_gardener_command(gc):
+    lcmd = gc.lower()
     args = gc.split()
-    largs = gc.lower().split()
+    argc = len(args)
+    largs = lcmd.split()
     
     if largs[0] == 'water_pump_on':
-        gardener_water_pump_on( args[1] )
+        control_waterpump.On()
     elif largs[0] == "system_reboot":
         print('Rebooting system...')
         os.system("reboot")
@@ -87,14 +74,18 @@ def process_gardener_command(gc):
     elif largs[0] == "ping":
         print('ping')
     elif largs[0] == "check_moisture":
-        update_params_moisture_sensor()
+        #update_params_moisture_sensor()
         print("Moisture param updated.")
     elif largs[0] == 'force_water':
         print("Forcing maintenance.")
-        gardener_do_maint();
+        #gardener_do_maint();
     elif largs[0] == "kill_process":
         print("Killing Process.")
-        return 1
+        sys.exit(1)
+    elif largs[0] == 'water_for':
+        if argc > 1:
+            duration = largs[1]
+            control_waterpump.water_for(int(duration))
 
 if __name__ == '__main__':
     if gardener_init() == 0:
