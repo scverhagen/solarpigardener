@@ -1,6 +1,8 @@
 import os
 import gpiozero
 
+import gardener_controls
+
 def gardener_init():
     print("Solar Pi Gardener")
     print("Background daemon")
@@ -13,24 +15,14 @@ def gardener_init():
     if os.getuid() !=0:
         print("This program must run as root!")
         return 1;
-
-    # init wiringPi (gpio library)
-    print("init wiringPi GPIO library...")
-    wiringPiSetup();
-
-    # tick functionality:
-    tick_sec = 0;
-    tick_min = 0;
-    
+   
     # init_settings:
-    gardener_settings.load_settings();
-    gardener_settings.init_params();
+#    gardener_settings.load_settings();
+#    gardener_settings.init_params();
     
     # init sections:
-    init_battery()
-    init_fan()
-    init_water_pump()
-    init_moisture_sensor()
+    control_waterpump = gardener_controls.water_pump()
+    sensor_moisture = gardener_controls.moisture_sensor()
 
     # create /tmp-gardener tmpfs mount point:
     os.system("mkdir -p /tmp-gardener")
@@ -52,11 +44,14 @@ def gardener_init():
 
     print("init routine complete.")
 
-
+lasttime = 0
 def gardener_loop():
-    gc = gardener_command()
-
     while (1):
+        newtime = time.time()
+    
+        gc = gardener_command()
+
+    
         #update params:
         update_params_battery();
         if ( tick_min == 0 and tick_sec == 0 ):
@@ -94,7 +89,7 @@ def process_gardener_command(gc):
     elif largs[0] == "check_moisture":
         update_params_moisture_sensor()
         print("Moisture param updated.")
-    elif largs[0] == 'do_maint':
+    elif largs[0] == 'force_water':
         print("Forcing maintenance.")
         gardener_do_maint();
     elif largs[0] == "kill_process":
