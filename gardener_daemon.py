@@ -2,8 +2,17 @@
 
 import os
 import sys
+import platform
 import time
-import gpiozero
+
+if os.getuid() !=0:
+    print("This program must run as root!")
+    exit()
+
+is_pi = (platform.machine() == 'armv7l')
+
+if is_pi:
+    import gpiozero
 
 import gardener_controls
 import gardener_fifo
@@ -26,10 +35,6 @@ def gardener_init():
     # init i2c adc interface:
     #print ("init i2c adc interface...")
     #init_adc();
-    
-    if os.getuid() !=0:
-        print("This program must run as root!")
-        return 1;
    
     # init_settings:
 #    gardener_settings.load_settings();
