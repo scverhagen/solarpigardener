@@ -9,13 +9,14 @@ if os.getuid() !=0:
     print("This program must run as root!")
     exit()
 
+import gardener_controls
+import gardener_fifo # this needs root
+import gardener_fx
+
 is_pi = (platform.machine() == 'armv7l')
 
 if is_pi:
     import gpiozero
-
-import gardener_controls
-import gardener_fifo
 
 command_fifo = gardener_fifo.command_fifo()
 status_fifo = gardener_fifo.status_fifo()

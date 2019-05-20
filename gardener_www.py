@@ -5,6 +5,7 @@ app = Flask(__name__)
 
 import simple_html as html
 import gardener_fifo
+import gardener_fx
 
 thisfilepath = os.path.dirname(__file__)
 status_fifo = gardener_fifo.status_fifo()
@@ -22,7 +23,7 @@ def wwww_dashboard():
     <ul class="list-group">
         <li class="list-group-item d-flex justify-content-between align-items-center">
         """
-    hs += 'Uptime (in seconds) <span class="badge badge-primary badge-pill">' + str(status_dict['uptime']) + '</span>'
+    hs += 'Uptime<span class="badge badge-primary badge-pill">' + str( gardener_fx.time_to_text(status_dict['uptime'])) + '</span>'
     hs += """
         </li>
     </ul>
