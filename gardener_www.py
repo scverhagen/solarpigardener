@@ -39,7 +39,7 @@ def wwww_dashboard():
         </li>
         <li class="list-group-item d-flex justify-content-between align-items-center">
         """
-    hs += 'Battery Voltage<span class="badge badge-primary badge-pill">' + str(status_dict['bat_voltage']) + '</span>'
+    hs += 'Battery Voltage<span class="badge badge-primary badge-pill">' + str(status_dict['bat_voltage']) + ' V</span>'
     hs += """
         </li>
     </ul>
@@ -50,7 +50,7 @@ def wwww_dashboard():
     <ul class="list-group">
         <li class="list-group-item d-flex justify-content-between align-items-center">
         """
-    hs += 'Soil Moisture Reading<span class="badge badge-primary badge-pill">' + str(status_dict['moisture_reading']) + '</span>'
+    hs += 'Soil Moisture Reading<span class="badge badge-primary badge-pill">' + str(status_dict['moisture_reading']) + '%</span>'
     hs += """
         </li>
     </ul>
