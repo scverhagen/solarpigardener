@@ -14,8 +14,8 @@ thisfilepath = os.path.dirname(__file__)
 status_fifo = gardener_fifo.status_fifo()
 command_fifo = gardener_fifo.command_fifo()
 
-@app.route('/dashboard')
-def wwww_dashboard():
+@app.route('/status')
+def wwww_status():
     status_dict = status_fifo.getstatusdict()
     
     hs = html.html_start()
@@ -64,7 +64,7 @@ def wwww_dashboard():
     return hs
 
 @app.route('/controls')
-def www_settings():
+def www_controls():
     hs = html.html_start()
     hs += html.readfile('navbar')
     hs += '<div class="jumbotron">'
@@ -72,6 +72,20 @@ def www_settings():
     hs += """
     <button class="btn btn-primary" type="submit" onclick="window.location.href='/pump5'">Pump water for 5 mins</button>
     """
+    hs += '</div>'
+    hs += '</boody></html>'
+    return hs
+
+@app.route('/dashboard')
+def www_dashboard():
+    hs = html.html_start()
+    hs += html.readfile('navbar')
+    hs += '<div class="jumbotron">'
+    
+    vid_feed_url = settings.get('url_video_feed')
+    if vid_feed_url != "":
+        hs += '<img src="' + vid_feed_url + '" style="width:100%;height=auto">'
+    
     hs += '</div>'
     hs += '</boody></html>'
     return hs
