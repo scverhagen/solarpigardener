@@ -3,6 +3,9 @@ import os
 from flask import Flask, request, send_file
 app = Flask(__name__)
 
+import gardener_settings
+settings = gardener_settings.settings()
+
 import simple_html as html
 import gardener_fifo
 import gardener_fx

@@ -8,6 +8,9 @@ import time
 if os.getuid() !=0:
     print("This program must run as root!")
     exit()
+    
+import gardener_settings
+settings = gardener_settings.settings()
 
 import gardener_controls
 import gardener_fifo # this needs root
