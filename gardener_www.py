@@ -112,7 +112,7 @@ def www_favicon():
 
 @app.route('/')
 def www_root():
-    return wwww_dashboard()
+    return www_dashboard()
 
 #needs to be at end of file:
 if __name__ == '__main__':
