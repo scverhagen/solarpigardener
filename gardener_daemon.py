@@ -22,6 +22,7 @@ command_fifo = gardener_fifo.command_fifo()
 status_fifo = gardener_fifo.status_fifo()
 
 control_waterpump = gardener_controls.water_pump()
+control_acc_5v_power = gardener_controls.acc_5v_power()
 #sensor_moisture = gardener_controls.moisture_sensor()
 
 status_dict = {'bat_voltage': 0, 'bat_status':'na', 'moisture_reading': 0, 'uptime': 0}
@@ -40,6 +41,7 @@ def gardener_init():
     # init_settings:
 #    gardener_settings.load_settings();
 #    gardener_settings.init_params();
+    control_acc_5v_power.On()
 
     print("init routine complete.")
     return 0
