@@ -3,12 +3,12 @@ import os
 from flask import Flask, request, send_file
 app = Flask(__name__)
 
-import gardener_settings
+import app.gardener_settings as gardener_settings
 settings = gardener_settings.settings()
 
 import simple_html as html
-import gardener_fifo
-import gardener_fx
+import app.gardener_fifo as gardener_fifo
+import app.gardener_fx as gardener_fx
 
 thisfilepath = os.path.dirname(__file__)
 status_fifo = gardener_fifo.status_fifo()
@@ -116,4 +116,4 @@ def www_root():
 
 #needs to be at end of file:
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=8088, threaded=True)
+    app.run(debug=True)
