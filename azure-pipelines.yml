@@ -30,5 +30,6 @@ steps:
   displayName: 'pytest'
 
 - script: |
+    sudo apt install -y qemu qemu-user-static qemu-user binfmt-support
     docker build -t solarpi .
   displayName: 'Build Docker Image'
