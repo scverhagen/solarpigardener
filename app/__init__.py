@@ -1,12 +1,11 @@
 #!/usr/bin/python3
 import os
-from flask import Flask, request, send_file
+from flask import Flask, request, send_file, render_template
 app = Flask(__name__)
 
 import app.gardener_settings as gardener_settings
 settings = gardener_settings.settings()
 
-import simple_html as html
 import app.gardener_fifo as gardener_fifo
 import app.gardener_fx as gardener_fx
 
@@ -65,50 +64,20 @@ def wwww_status():
 
 @app.route('/controls')
 def www_controls():
-    hs = html.html_start()
-    hs += html.readfile('navbar')
-    hs += '<div class="jumbotron">'
-    hs += '<h3>Controls</h3>'
-    hs += """
-    <button class="btn btn-primary" type="submit" onclick="window.location.href='/pump5'">Pump water for 5 mins</button>
-    """
-    hs += '</div>'
-    hs += '</boody></html>'
-    return hs
+    return render_template('controls.html')
 
 @app.route('/dashboard')
 def www_dashboard():
-    hs = html.html_start()
-    hs += html.readfile('navbar')
-    hs += '<div class="jumbotron">'
-    
-    vid_feed_url = settings.get('url_video_feed')
-    if vid_feed_url != "":
-        hs += '<img src="' + vid_feed_url + '" style="width:100%;height=auto">'
-    
-    hs += '</div>'
-    hs += '</boody></html>'
-    return hs
+    return render_template('index.html')
 
 @app.route('/pump5')
 def www_pump5():
-    hs = html.html_start()
-    hs += html.readfile('navbar')
-    hs += '<div class="jumbotron">'
-    hs += 'Pumping water for 5 minutes...'
-    hs += '</div>'
-    hs += '</boody></html>'
     command_fifo.sendcommand('water_for 300')
-    return hs
-
-@app.route('/getimage')
-def www_getimg():
-    img = request.args.get('image')
-    return(html.getimage(img))
+    return render_template('pump5.html')
 
 @app.route('/favicon.ico')
 def www_favicon():
-    return(html.getimage('logo.png'))
+    app.send_static_file('logo.img')
 
 @app.route('/')
 def www_root():
