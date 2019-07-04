@@ -5,6 +5,12 @@ import json
 
 thisfilepath = os.path.dirname(__file__)
 
+IN_DOCKER = False
+docker_env = os.environ.get('IN_DOCKER', False)
+if docker_env:
+    print('Running in docker conainer.')
+    IN_DOCKER = True
+
 global defaultsettingsdict
 defaultsettingsdict = {'water_application_inches_per_week':2, 'water_application_days_per_week':2 , 'sprinkler_inches_per_minute':0.00418, 'owm_key':'enter_key_here', 'url_video_feed':''}
 
