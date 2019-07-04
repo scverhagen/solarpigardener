@@ -13,6 +13,8 @@ WORKDIR ./solarpi
 RUN pip3 install -r ./requirements.txt
 
 ENV IN_DOCKER Yes
+ENV GPIO_PIN_FACTORY=pigpio
+ENV PIGPIO_ADDR=host.docker.internal
 
 EXPOSE 80
 CMD ./dockerscript.sh
