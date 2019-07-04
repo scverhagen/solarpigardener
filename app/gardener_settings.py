@@ -8,7 +8,7 @@ thisfilepath = os.path.dirname(__file__)
 IN_DOCKER = False
 docker_env = os.environ.get('IN_DOCKER', False)
 if docker_env:
-    print('Running in docker conainer.')
+    print('Running in docker container.')
     IN_DOCKER = True
 
 global defaultsettingsdict
