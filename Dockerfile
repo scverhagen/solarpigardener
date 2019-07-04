@@ -6,11 +6,11 @@ LABEL maintainer="Steve Verhagen<scverhagen@gmail.com>"
 RUN apt update
 RUN apt install -y python3 python3-dev python3-pip nginx
 RUN pip3 install uwsgi
-RUN pip3 install -r ./requirements.txt
 COPY ./nginx.conf /etc/nginx/sites-enabled/default
 
 COPY ./ ./solarpi
 WORKDIR ./solarpi
+RUN pip3 install -r ./requirements.txt
 
 ENV IN_DOCKER Yes
 
