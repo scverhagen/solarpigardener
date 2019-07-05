@@ -1,4 +1,4 @@
-FROM arm32v7/debian:stretch-slim
+FROM arm32v7/debian:stretch
 LABEL maintainer="Steve Verhagen<scverhagen@gmail.com>"
 
 #COPY qemu-arm-static /usr/bin
