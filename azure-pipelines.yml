@@ -36,5 +36,5 @@ steps:
     sudo apt update && sudo apt upgrade
     sudo apt install -y qemu qemu-user-static qemu-user binfmt-support
     docker build -t solarpigardener .
-displayName: 'Build Docker Image'
+  name: 'Build Docker Image'
   
