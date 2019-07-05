@@ -16,8 +16,9 @@ if docker_env:
     IN_DOCKER = True
 
 factory = PiGPIOFactory('solarpi.lan')
-if IN_DOCKER:
-    factory = PiGPIOFactory('host.docker.internal')
+#if IN_DOCKER:
+    #this currently does not work in older docker versions:
+    #factory = PiGPIOFactory('host.docker.internal')
 
 pin_moisture_sensor = 20
 pin_water_solenoid = 21
