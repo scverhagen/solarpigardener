@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+
 import os
 from flask import Flask, request, send_file, render_template
 app = Flask(__name__)
@@ -6,61 +7,40 @@ app = Flask(__name__)
 import app.gardener_settings as gardener_settings
 settings = gardener_settings.settings()
 
-import app.gardener_fifo as gardener_fifo
 import app.gardener_fx as gardener_fx
 
-thisfilepath = os.path.dirname(__file__)
-status_fifo = gardener_fifo.status_fifo()
-command_fifo = gardener_fifo.command_fifo()
+import app.gardener_controls as gardener_controls
+control_waterpump = gardener_controls.water_pump()
 
-@app.route('/status')
-def wwww_status():
-    status_dict = status_fifo.getstatusdict()
+def process_gardener_command(gc):
+    lcmd = gc.lower()
+    args = gc.split()
+    argc = len(args)
+    largs = lcmd.split()
     
-    hs = html.html_start()
-    hs += html.readfile('navbar')
-    hs += '<div class="jumbotron">'
-    hs += '<h3>Service</h3>'
-    hs += """
-    <ul class="list-group">
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-        """
-    hs += 'Uptime<span class="badge badge-primary badge-pill">' + str( gardener_fx.time_to_text(status_dict['uptime'])) + '</span>'
-    hs += """
-        </li>
-    </ul>
-    """
-    hs += "<br>"
-    hs += '<h3>Power</h3>'
-    hs += """
-    <ul class="list-group">
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-        """
-    hs += 'Battery Status<span class="badge badge-primary badge-pill">' + status_dict['bat_status'] + '</span>'
-    hs += """
-        </li>
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-        """
-    hs += 'Battery Voltage<span class="badge badge-primary badge-pill">' + str(status_dict['bat_voltage']) + ' V</span>'
-    hs += """
-        </li>
-    </ul>
-    """
-    hs += '<br>'
-    hs += '<h3>Readings</h3>'
-    hs += """
-    <ul class="list-group">
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-        """
-    hs += 'Soil Moisture Reading<span class="badge badge-primary badge-pill">' + str(status_dict['moisture_reading']) + '%</span>'
-    hs += """
-        </li>
-    </ul>
-    """
-
-    hs += '</div>'
-    hs += '</boody></html>'
-    return hs
+    if largs[0] == 'water_pump_on':
+        control_waterpump.On()
+    elif largs[0] == "system_reboot":
+        print('Rebooting system...')
+        os.system("reboot")
+    elif largs[0] == "system_poweroff":
+        print('Powering system OFF...')
+        os.system("poweroff");
+    elif largs[0] == "ping":
+        print('ping')
+    elif largs[0] == "check_moisture":
+        #update_params_moisture_sensor()
+        print("Moisture param updated.")
+    elif largs[0] == 'force_water':
+        print("Forcing maintenance.")
+        #gardener_do_maint();
+    elif largs[0] == "kill_process":
+        print("Killing Process.")
+        sys.exit(1)
+    elif largs[0] == 'water_for':
+        if argc > 1:
+            duration = largs[1]
+            control_waterpump.water_for(int(duration))
 
 @app.route('/controls')
 def www_controls():
@@ -72,7 +52,7 @@ def www_dashboard():
 
 @app.route('/pump5')
 def www_pump5():
-    command_fifo.sendcommand('water_for 300')
+    control_waterpump.water_for(5)
     return render_template('pump5.html')
 
 @app.route('/favicon.ico')
