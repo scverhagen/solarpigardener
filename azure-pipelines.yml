@@ -29,8 +29,7 @@ steps:
     pytest
   displayName: 'pytest'
 
-- script: docker run --rm --privileged multiarch/qemu-user-static:register --reset
-  name: RegisterQemu
-
-- script: docker build -t scverhagen/solarpigardener .
-  name: BuildContainer
+- script: |
+    docker run --rm --privileged multiarch/qemu-user-static:register --reset
+    docker build -t scverhagen/solarpigardener .
+  displayName: 'docker'
