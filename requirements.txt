@@ -3,4 +3,5 @@ flask-sqlalchemy
 flask-WTF
 flask_migrate
 RPi.GPIO
+pigpio
 gpiozero
