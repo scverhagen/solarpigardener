@@ -1,5 +1,4 @@
-#FROM arm32v7/debian:stretch
-FROM resin/rpi-raspbian
+FROM balenalib/raspberry-pi-debian:latest
 LABEL maintainer="Steve Verhagen<scverhagen@gmail.com>"
 
 #COPY qemu-arm-static /usr/bin
