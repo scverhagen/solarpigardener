@@ -32,7 +32,6 @@ steps:
 
 - script: |
     sudo apt update
-    sudo apt install -y qemu qemu-user-static qemu-user binfmt-support bash sh
-    docker run --rm --privileged multiarch/qemu-user-static:register --reset
+    docker run --rm --privileged multiarch/qemu-user-static:register
     docker build -t scverhagen/solarpigardener .
   displayName: 'docker'
