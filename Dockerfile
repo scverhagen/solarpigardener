@@ -3,7 +3,7 @@ LABEL maintainer="Steve Verhagen<scverhagen@gmail.com>"
 
 #COPY qemu-arm-static /usr/bin
 
-RUN apt-get update && apt-get install -y python3 python3-dev python3-pip nginx  && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y python3 python3-dev python3-pip nginx build-essential && rm -rf /var/lib/apt/lists/*
 RUN pip3 install uwsgi
 COPY ./nginx.conf /etc/nginx/sites-enabled/default
 
