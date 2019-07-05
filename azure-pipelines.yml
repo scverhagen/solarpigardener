@@ -29,8 +29,12 @@ steps:
     pytest
   displayName: 'pytest'
 
+- script: docker run --rm --privileged multiarch/qemu-user-static:register --reset
+  name: RegisterQemu
+
 - script: |
     sudo apt update && sudo apt upgrade
     sudo apt install -y qemu qemu-user-static qemu-user binfmt-support
-    docker build -t solarpi .
-  displayName: 'Build Docker Image'
+    docker build -t solarpigardener .
+displayName: 'Build Docker Image'
+  
