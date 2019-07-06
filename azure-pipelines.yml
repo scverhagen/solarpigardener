@@ -4,7 +4,7 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/python
 
 trigger:
-- python
+- production
 
 pool:
   #vmImage: 'ubuntu1804'
