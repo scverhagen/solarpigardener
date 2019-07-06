@@ -4,7 +4,7 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/python
 
 trigger:
-- python
+- production
 
 pool:
   #vmImage: 'ubuntu1804'
@@ -34,6 +34,6 @@ steps:
     sudo apt update
     docker run --rm --privileged multiarch/qemu-user-static:register
     docker build -t scverhagen/solarpigardener .
-    docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-    docker push scverahgen/solarpigardener
+    docker login -u $(DOCKER_USERNAME) -p $(DOCKER_PASSWORD)
+    docker push scverhagen/solarpigardener
   displayName: 'docker'
