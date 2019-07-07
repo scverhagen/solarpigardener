@@ -3,8 +3,11 @@ import os
 import sys
 import platform
 import time
+from flask import Flask
 import gpiozero
+from celery import Celery
 from gpiozero.pins.pigpio import PiGPIOFactory
+import app
 
 import app.gardener_settings as gardener_settings
 
@@ -39,13 +42,9 @@ class water_pump(object):
         self.solenoid.off()
                     
     def water_for(self, secs):
-        pid = os.fork()
-        if pid == 0:
-            # child process:
             self.solenoid.on()
             time.sleep(secs)
             self.solenoid.off()
-            os._exit(0)
             
 class acc_5v_power(object):
     def __init__(self):
