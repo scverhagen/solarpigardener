@@ -3,7 +3,10 @@ LABEL maintainer="Steve Verhagen<scverhagen@gmail.com>"
 
 #COPY qemu-arm-static /usr/bin
 
-RUN apt-get update && apt-get install -y python3 python3-dev python3-setuptools python3-pip nginx build-essential && rm -rf /var/lib/apt/lists/*
+RUN mkdir /etc/redis
+COPY ./redis.conf /etc/redis
+RUN apt-get update && apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y redis-server python3 python3-dev python3-setuptools python3-pip nginx build-essential && rm -rf /var/lib/apt/lists/*
+
 RUN pip3 install --upgrade pip
 RUN pip3 install uwsgi
 COPY ./nginx.conf /etc/nginx/sites-enabled/default
