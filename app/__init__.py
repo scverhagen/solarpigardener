@@ -69,6 +69,13 @@ def www_pump5():
     do_water_for.delay(300)
     return render_template('pump5.html')
 
+@app.route('/pump')
+def www_pump():
+    num_mins = request.args.get('mins')
+    num_secs = 60 * num_mins
+    do_water_for.delay(num_secs)
+    return render_template('pumpX.html', mins=str(num_mins))
+
 @app.route('/favicon.ico')
 def www_favicon():
     app.send_static_file('logo.img')
