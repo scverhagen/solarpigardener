@@ -2,3 +2,4 @@ daemon/gardener
 __pycache__/
 gardener_settings.json
 data/
+*.rdb
