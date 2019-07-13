@@ -35,7 +35,7 @@ Requires=docker.service
 [Service]
 TimeoutStartSec=0
 Restart=always
-ExecStart=/usr/bin/docker run --rm -p 80:80 --name solarpigardener scverhagen/solarpigardener
+ExecStart=/usr/bin/docker run -p 80:80 scverhagen/solarpigardener
 
 [Install]
 WantedBy=multi-user.target
@@ -56,8 +56,7 @@ Requires=docker.service
 [Service]
 TimeoutStartSec=30
 Restart=always
-ExecStartPre=/usr/bin/docker pull talmai/rpi-watchtower
-ExecStart=/usr/bin/docker run --rm -v /var/run/docker.sock:/var/run/docker.sock talmai/rpi-watchtower --cleanup
+ExecStart=/usr/bin/docker run -v /var/run/docker.sock:/var/run/docker.sock v2tec/watchtower:armhf-latest --cleanup
 
 [Install]
 WantedBy=multi-user.target
