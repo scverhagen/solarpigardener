@@ -58,20 +58,23 @@ control_waterpump = gardener_controls.water_pump()
 def do_water_for(secs):
     control_waterpump.water_for(secs)
     
-    
-
 @app.route('/controls')
 def www_controls():
     return render_template('controls.html')
 
-@app.route('/pump5')
-def www_pump5():
-    do_water_for.delay(300)
-    return render_template('pump5.html')
+@app.route('/controls_pump')
+def www_controls_pump():
+    return render_template('controls_pump.html')
 
 @app.route('/pump')
 def www_pump():
     num_mins = request.args.get('mins')
+
+    if num_mins == None:
+        return 'An error has occurred.'
+    else:
+        num_mins = int(num_mins)
+        
     num_secs = 60 * num_mins
     do_water_for.delay(num_secs)
     return render_template('pumpX.html', mins=str(num_mins))
