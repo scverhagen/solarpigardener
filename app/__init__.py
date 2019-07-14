@@ -3,7 +3,11 @@
 import os
 import socket
 
+from app import forms
+from app import config
+
 def get_ip():
+    # strange hack to get local ip address:
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
         # doesn't even have to be reachable
@@ -16,8 +20,9 @@ def get_ip():
     return IP
 
 
-from flask import Flask, request, send_file, render_template
+from flask import Flask, request, send_file, render_template, redirect, url_for
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'garDener_debuG_seCret'
 
 
 app.config.update(
@@ -44,10 +49,6 @@ def make_celery(app):
 
 
 celery = make_celery(app)
-
-
-import app.gardener_settings as gardener_settings
-settings = gardener_settings.settings()
 
 import app.gardener_fx as gardener_fx
 
@@ -86,6 +87,17 @@ def www_favicon():
 @app.route('/')
 def www_root():
     return www_controls()
+
+@app.route('/config', methods=["GET","POST"])
+def www_config():
+    g_settings = config.loadSettings()
+    form = forms.ConfigForm(obj=g_settings)
+    if form.validate_on_submit():
+        form.populate_obj(g_settings)
+        config.saveSettings(g_settings)
+        return redirect(url_for("www_root"))
+    
+    return render_template('config.html', form=form)
 
 #needs to be at end of file:
 if __name__ == '__main__':

@@ -9,8 +9,6 @@ from celery import Celery
 from gpiozero.pins.pigpio import PiGPIOFactory
 import app
 
-import app.gardener_settings as gardener_settings
-
 is_pi = (platform.machine() == 'armv7l')
 IN_DOCKER = False
 docker_env = os.environ.get('IN_DOCKER', False)
@@ -18,7 +16,7 @@ if docker_env:
     print('Running in docker container.')
     IN_DOCKER = True
 
-factory = PiGPIOFactory('solarpi.lan')
+factory = PiGPIOFactory('solarpi')
 #if IN_DOCKER:
     #this currently does not work in older docker versions:
     #factory = PiGPIOFactory('host.docker.internal')
