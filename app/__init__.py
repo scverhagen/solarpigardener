@@ -90,7 +90,10 @@ def www_favicon():
 
 @app.route('/')
 def www_root():
-    return render_template('index.html')
+    if os.path.exists(config.settingsjsonpath):
+        return render_template('index.html')
+    else:
+        return www_config()
 
 @app.route('/config', methods=["GET","POST"])
 def www_config():
