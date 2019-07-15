@@ -100,7 +100,14 @@ def www_config():
     g_settings = config.loadSettings()
     form = forms.ConfigForm(obj=g_settings)
     if form.validate_on_submit():
+        old_password = g_settings.admin_password
         form.populate_obj(g_settings)
+        
+        # use old password if none specified:
+        if g_settings.admin_password == '':
+            g_settings.admin_password = old_password
+
+        # save configuration
         config.saveSettings(g_settings)
         return redirect( url_for('www_root') )
     
