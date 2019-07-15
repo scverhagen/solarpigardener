@@ -1,5 +1,5 @@
 from flask_wtf import Form
-from wtforms import StringField, BooleanField, SubmitField, IntegerField, TimeField
+from wtforms import StringField, BooleanField, SubmitField, IntegerField, TimeField, PasswordField
 from wtforms.validators import DataRequired
 
 
@@ -15,4 +15,7 @@ class ConfigForm(Form):
     enable_auto_watering = BooleanField('Enable Automatic Watering')
     submit = SubmitField('Save Settings')
 
-    
+class LoginForm(Form):
+    username = StringField(label=u'Username', validators=[DataRequired()])
+    password = PasswordField(label=u'Password', validators=[DataRequired()])
+    submit = SubmitField(label='Log In')
