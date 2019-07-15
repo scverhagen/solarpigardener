@@ -102,7 +102,7 @@ def www_config():
     if form.validate_on_submit():
         form.populate_obj(g_settings)
         config.saveSettings(g_settings)
-        return redirect("/")
+        return redirect( url_for('www_root') )
     
     return render_template('config.html', form=form)
 
