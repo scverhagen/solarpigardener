@@ -33,7 +33,7 @@ class Settings(object):
 
 def saveSettings(g_settings):
     json = g_settings.to_json()
-    echo 'Saving config to: ' + settingsjsonpath
+    print('Saving config to: ' + settingsjsonpath)
     with open(settingsjsonpath , 'w') as file:
         file.write(json)
     
