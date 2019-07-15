@@ -102,9 +102,18 @@ def www_config():
     if form.validate_on_submit():
         form.populate_obj(g_settings)
         config.saveSettings(g_settings)
-        return redirect("/")
+        return redirect( url_for('www_root') )
     
     return render_template('config.html', form=form)
+
+@app.route('/login', methods=["GET","POST"])
+def www_login():
+    g_settings = config.loadSettings()
+    form = forms.LoginForm()
+    if form.validate_on_submit():
+        return redirect( url_for('www_root') )
+    
+    return render_template('login.html', form=form)
 
 #needs to be at end of file:
 if __name__ == '__main__':
