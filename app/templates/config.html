@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="jumbotron">
-<h3>Configuration</h3>
+<h3>Settings</h3>
 <form method="POST" action="{{ url_for('www_config') }}">
 {{ form.csrf_token }}
 <table border="0" cellpadding="5">

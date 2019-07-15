@@ -4,11 +4,13 @@ import os
 import json
 
 thisfilepath = os.path.dirname(__file__)
+settingsjsonpath = os.path.join(thisfilepath, 'gardener_settings.json')
 
 IN_DOCKER = False
 docker_env = os.environ.get('IN_DOCKER', False)
 if docker_env:
     print('Running in docker container.')
+    settingsjsonpath = '/etc/gardener/gardener.conf'
     IN_DOCKER = True
 
 
@@ -30,13 +32,12 @@ class Settings(object):
         return cls(**json_dict)
 
 def saveSettings(g_settings):
-    settingsjsonpath = os.path.join(thisfilepath, 'gardener_settings.json')
     json = g_settings.to_json()
+    echo 'Saving config to: ' + settingsjsonpath
     with open(settingsjsonpath , 'w') as file:
         file.write(json)
     
 def loadSettings():
-    settingsjsonpath = os.path.join(thisfilepath, 'gardener_settings.json')
     g_settings = Settings()
 
     # if gardener_settings.json file exists, load settings from json, otherwise, load default settings:

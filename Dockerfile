@@ -2,6 +2,7 @@ FROM balenalib/raspberry-pi-debian:latest
 LABEL maintainer="Steve Verhagen<scverhagen@gmail.com>"
 
 #COPY qemu-arm-static /usr/bin
+RUN mkdir -p /etc/gardener
 
 RUN mkdir /etc/redis
 COPY ./redis.conf /etc/redis
