@@ -35,7 +35,7 @@ Requires=docker.service
 [Service]
 TimeoutStartSec=0
 Restart=always
-ExecStart=/usr/bin/docker run -p 80:80 scverhagen/solarpigardener
+ExecStart=/usr/bin/docker run -v /etc/gardener:/etc/gardener -p 80:80 scverhagen/solarpigardener
 
 [Install]
 WantedBy=multi-user.target

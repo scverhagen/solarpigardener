@@ -67,6 +67,10 @@ def www_controls():
 def www_controls_pump():
     return render_template('controls_pump.html')
 
+@app.route('/schedule')
+def www_schedule():
+    return render_template('schedule.html')
+
 @app.route('/pump')
 def www_pump():
     num_mins = request.args.get('mins')
@@ -86,7 +90,7 @@ def www_favicon():
 
 @app.route('/')
 def www_root():
-    return www_controls()
+    return render_template('index.html')
 
 @app.route('/config', methods=["GET","POST"])
 def www_config():
@@ -95,7 +99,7 @@ def www_config():
     if form.validate_on_submit():
         form.populate_obj(g_settings)
         config.saveSettings(g_settings)
-        return redirect(url_for("www_root"))
+        return redirect("/")
     
     return render_template('config.html', form=form)
 
