@@ -13,7 +13,7 @@ class ConfigForm(Form):
     water_time_hour = IntegerField('Watering Time Hour (0-23)', validators=[DataRequired()])
     sprinkler_inches_per_minute = StringField(validators=[DataRequired()])
     enable_auto_watering = BooleanField('Enable Automatic Watering')
-    admin_password = PasswordField(label=u'Admin Password', validators=[DataRequired()])
+    admin_password = PasswordField(label=u'Admin Password')
     submit = SubmitField('Save Settings')
 
 class LoginForm(Form):
