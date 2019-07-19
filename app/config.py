@@ -15,13 +15,14 @@ if docker_env:
 
 
 class Settings(object):
-    def __init__(self, hardware_water_gpio_pin = 21, water_inches_per_week = 2, water_days_per_week = 2, water_time_hour = 6, sprinkler_inches_per_minute = "0.00418", enable_auto_watering = 0, submit = None):
+    def __init__(self, hardware_water_gpio_pin = 21, water_inches_per_week = 2, water_days_per_week = 2, water_time_hour = 6, sprinkler_inches_per_minute = "0.00418", enable_auto_watering = 0, submit = None, admin_password = ''):
         self.hardware_water_gpio_pin = hardware_water_gpio_pin
         self.water_inches_per_week = water_inches_per_week
         self.water_days_per_week = water_days_per_week
         self.water_time_hour = water_time_hour
         self.sprinkler_inches_per_minute = sprinkler_inches_per_minute
         self.enable_auto_watering = enable_auto_watering
+        self.admin_password = admin_password
 
     def to_json(self):
         return json.dumps(self.__dict__)

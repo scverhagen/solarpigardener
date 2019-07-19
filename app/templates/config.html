@@ -4,51 +4,77 @@
 <h3>Settings</h3>
 <form method="POST" action="{{ url_for('www_config') }}">
 {{ form.csrf_token }}
-<table border="0" cellpadding="5">
-<tr>
-    <td><strong>Hardware:</strong></td>
-    <td></td>
-</tr>
-<tr>
-    <td>{{ form.hardware_water_gpio_pin.label }}</td>
-    <td>{{ form.hardware_water_gpio_pin }}</td>
-</tr>
-<tr>
-<td style="line-height:25px;" colspan=3>&nbsp;</td>
-</tr>
-<tr>
-    <td><strong>Watering Schedule:</strong></td>
-    <td></td>
-</tr>
-<tr>
-    <td>{{ form.enable_auto_watering.label }}</td>
-    <td>{{ form.enable_auto_watering }}</td>
-</tr>
-<tr>
-    <td>{{ form.water_time_hour.label }}</td>
-    <td>{{ form.water_time_hour }}</td>
-</tr>
-<tr>
-    <td>{{ form.water_inches_per_week.label }}</td>
-    <td>{{ form.water_inches_per_week }}</td>
-</tr>
-<tr>
-    <td>{{ form.water_days_per_week.label }}</td>
-    <td>{{ form.water_days_per_week }}</td>
-</tr>
-<tr>
-<td style="line-height:25px;" colspan=3>&nbsp;</td>
-</tr>
-<tr>
-    <td><strong>Sprinkler Parameters:</strong></td>
-    <td></td>
-</tr>
-<tr>
-    <td>{{ form.sprinkler_inches_per_minute.label }}</td>
-    <td>{{ form.sprinkler_inches_per_minute }}</td>
-</tr>
+    <table border="0" cellpadding="5">
+        <tr>
+            <td><strong>Hardware:</strong></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>{{ form.hardware_water_gpio_pin.label }}</td>
+            <td>{{ form.hardware_water_gpio_pin }}</td>
+        </tr>
+        <tr>
+            <td style="line-height:25px;" colspan=3>&nbsp;</td>
+        </tr>
+        <tr>
+            <td><strong>Watering Schedule:</strong></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>{{ form.enable_auto_watering.label }}</td>
+            <td>{{ form.enable_auto_watering }}</td>
+        </tr>
+        <tr>
+            <td>{{ form.water_time_hour.label }}</td>
+            <td>{{ form.water_time_hour }}</td>
+        </tr>
+        <tr>
+            <td>{{ form.water_inches_per_week.label }}</td>
+            <td>{{ form.water_inches_per_week }}</td>
+        </tr>
+        <tr>
+            <td>{{ form.water_days_per_week.label }}</td>
+            <td>{{ form.water_days_per_week }}</td>
+        </tr>
+        <tr>
+            <td style="line-height:25px;" colspan=3>&nbsp;</td>
+        </tr>
+        <tr>
+            <td><strong>Sprinkler Parameters:</strong></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>{{ form.sprinkler_inches_per_minute.label }}</td>
+            <td>{{ form.sprinkler_inches_per_minute }}</td>
+        </tr>
 
-</table>
+        <tr>
+            <td style="line-height:25px;" colspan=3>&nbsp;</td>
+        </tr>
+        <tr>
+            <td><strong>Sprinkler Parameters:</strong></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>{{ form.sprinkler_inches_per_minute.label }}</td>
+            <td>{{ form.sprinkler_inches_per_minute }}</td>
+        </tr>
+        <tr>
+            <td style="line-height:25px;" colspan=3>&nbsp;</td>
+        </tr>
+        <tr>
+            <td><strong>Security:</strong></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Reset administrator password.  Leave it blank to keep it unchanged.</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>{{ form.admin_password.label }}</td>
+            <td>{{ form.admin_password }}</td>
+        </tr>
+    </table>
 {{ form.submit }}
 </form>
 </div>

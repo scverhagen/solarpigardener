@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="jumbotron">
+        <h3>Please Log in:</h3>
+
+        {% if session['logged_in'] %}
+        You are already logged in.
+        {% else %}
+        <form action="/login" method="POST">
+        {{ form.csrf_token }}
+        <table border="0" cellpadding="5">
+        <tr>
+            <td>{{ form.password.label }}</td>
+            <td>{{ form.password }}</td>
+            <td>{{ form.submit }}</td>
+        </tr>
+        </form>
+        {% endif %}
+
+
+    </div>
+    {% endblock %}

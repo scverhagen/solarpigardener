@@ -20,7 +20,7 @@ def get_ip():
     return IP
 
 
-from flask import Flask, request, send_file, render_template, redirect, url_for
+from flask import Flask, request, send_file, render_template, redirect, url_for, session
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'garDener_debuG_seCret'
 
@@ -100,11 +100,37 @@ def www_config():
     g_settings = config.loadSettings()
     form = forms.ConfigForm(obj=g_settings)
     if form.validate_on_submit():
+        old_password = g_settings.admin_password
         form.populate_obj(g_settings)
+        
+        # use old password if none specified:
+        if g_settings.admin_password == '':
+            session.clear()
+            g_settings.admin_password = old_password
+
+        # save configuration
         config.saveSettings(g_settings)
-        return redirect("/")
+        return redirect( url_for('www_root') )
     
     return render_template('config.html', form=form)
+
+@app.route('/login', methods=["GET","POST"])
+def www_login():
+    g_settings = config.loadSettings()
+    form = forms.LoginForm()
+    if form.validate_on_submit():
+        if form.password.data == g_settings.admin_password:
+            session['logged_in'] = True
+            print(form.password)
+        return redirect( url_for('www_root') )
+    
+    return render_template('login.html', form=form)
+
+@app.route('/logoff', methods=["GET"])
+def www_logoff():
+    session.clear()
+    
+    return redirect( url_for('www_root') )
 
 #needs to be at end of file:
 if __name__ == '__main__':
