@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo This script will install solarpigardener on a fresh Raspbian installation.  Please note that as of 7/13/2019 docker is still broken on Raspbian Buster.  Please use Raspbian Stretch for now.
-read -p "Continue? " -n 1 -r
+read -p "Continue? (y,n)" -n 1 -r
 echo    # (optional) move to a new line
 if [[ ! $REPLY =~ ^[Yy]$ ]]
 then
@@ -17,9 +17,9 @@ sudo systemctl start docker
 
 
 # install and enable pigpio (remote GPIO server)
-echo Installing pigpio (remote GPIO server)...
+echo Installing pigpio remote GPIO server...
 sudo apt-get install pigpio
-sudo apt-get install unmask pigpiod
+sudo systemctl unmask pigpiod
 sudo systemctl enable pigpiod
 sudo systemctl start pigpiod
 
