@@ -14,7 +14,7 @@ sudo apt-get install docker.io
 sudo systemctl unmask docker
 sudo systemctl enable docker
 sudo systemctl start docker
-
+sudo usermod -aG docker $USER
 
 # install and enable pigpio (remote GPIO server)
 echo Installing pigpio remote GPIO server...
