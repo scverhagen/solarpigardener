@@ -61,18 +61,27 @@ def do_water_for(secs):
     
 @app.route('/controls')
 def www_controls():
-    return render_template('controls.html')
+    if not session.get('logged_in'):
+        return render_template('access_denied.html')
 
+    return render_template('controls.html')
+    
 @app.route('/controls_pump')
 def www_controls_pump():
+    if not session.get('logged_in'):
+        return render_template('access_denied.html')
+    
     return render_template('controls_pump.html')
-
+    
 @app.route('/schedule')
 def www_schedule():
-    return render_template('schedule.html')
-
+        return render_template('schedule.html')
+ 
 @app.route('/pump')
 def www_pump():
+    if not session.get('logged_in'):
+        return render_template('access_denied.html')
+        
     num_mins = request.args.get('mins')
 
     if num_mins == None:
@@ -97,6 +106,9 @@ def www_root():
 
 @app.route('/config', methods=["GET","POST"])
 def www_config():
+    if not session.get('logged_in'):
+        return render_template('access_denied.html')
+    
     g_settings = config.loadSettings()
     form = forms.ConfigForm(obj=g_settings)
     if form.validate_on_submit():
@@ -110,7 +122,10 @@ def www_config():
 
         # save configuration
         config.saveSettings(g_settings)
-        return redirect( url_for('www_root') )
+        if len(g_settings.redirect_url) > 0:
+            return redirect( g_settings.redirect_url )
+        else:
+            return redirect( url_for('www_root') )
     
     return render_template('config.html', form=form)
 
@@ -121,9 +136,12 @@ def www_login():
     if form.validate_on_submit():
         if form.password.data == g_settings.admin_password:
             session['logged_in'] = True
-            print(form.password)
-        return redirect( url_for('www_root') )
-    
+ 
+        if len(g_settings.redirect_url) > 0:
+            return redirect( g_settings.redirect_url )
+        else:
+            return redirect( url_for('www_root') )
+
     return render_template('login.html', form=form)
 
 @app.route('/logoff', methods=["GET"])
