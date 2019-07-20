@@ -14,6 +14,7 @@ class ConfigForm(Form):
     sprinkler_inches_per_minute = StringField(validators=[DataRequired()])
     enable_auto_watering = BooleanField('Enable Automatic Watering')
     admin_password = PasswordField(label=u'Admin Password')
+    redirect_url = StringField(label=u'Redirect URL', validators=[DataRequired()])
     submit = SubmitField('Save Settings')
 
 class LoginForm(Form):
