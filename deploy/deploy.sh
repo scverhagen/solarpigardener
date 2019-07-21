@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo This script will install solarpigardener on a fresh Raspbian installation.  Please run as root.  Please note that as of 7/13/2019 docker is still broken on Raspbian Buster.  Please use Raspbian Stretch for now.
+echo This script will install solarpigardener on a fresh Raspbian installation.  Please note that as of 7/13/2019 docker is still broken on Raspbian Buster.  Please use Raspbian Stretch for now.
 read -p "Continue? (y,n)" -n 1 -r
 echo    # (optional) move to a new line
 if [[ ! $REPLY =~ ^[Yy]$ ]]
@@ -89,10 +89,6 @@ sudo systemctl start watchtower
 # change hostname to 'solarpi'
 echo Changing hostname to solarpi.
 sudo hostname solarpi
-
-#disable ipv6:
-sudo echo " " >> /boot/cmdline.txt
-echo "ipv6.disable=1" >> /boot/cmdline.txt
 
 echo Installation complete!
 read -p "Reboot (y, n)? " -n 1 -r
