@@ -17,7 +17,7 @@ if docker_env:
     print('Running in docker container.')
     IN_DOCKER = True
 
-factory = PiGPIOFactory('solarpi')
+factory = PiGPIOFactory('solarpi.lan')
 #if IN_DOCKER:
     #this currently does not work in older docker versions:
     #factory = PiGPIOFactory('host.docker.internal')
