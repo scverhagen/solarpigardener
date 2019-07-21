@@ -10,7 +10,10 @@ fi
 
 # install and enable docker:
 echo Installing docker...
-sudo apt-get install docker.io
+sudo apt-get remove docker docker-engine docker.io containerd runc
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+
 sudo systemctl unmask docker
 sudo systemctl enable docker
 sudo systemctl start docker
@@ -26,6 +29,7 @@ sudo systemctl start pigpiod
 
 # install solarpigardener docker container and systemd service:
 echo Installing solarpigardener docker container and systemd service...
+sudo rm -f /etc/systemd/system/solarpigardener.service
 sudo cat << 'EOF' >> /etc/systemd/system/solarpigardener.service
 [Unit]
 Description=solarpigardener Container
@@ -33,7 +37,7 @@ After=docker.service
 Requires=docker.service
 
 [Service]
-TimeoutStartSec=0
+TimeoutStartSec=30
 Restart=always
 ExecStart=/usr/bin/docker run -v /etc/gardener:/etc/gardener -p 80:80 scverhagen/solarpigardener
 
@@ -47,6 +51,7 @@ sudo systemctl start solarpigardener
 
 # install watchtower docker container and systemd service:
 echo Installing watchtower docker container and systemd service...
+sudo rm -f /etc/systemd/system/watchtower.service
 sudo cat << 'EOF' >> /etc/systemd/system/watchtower.service
 [Unit]
 Description=solarpigardener Container
@@ -54,7 +59,7 @@ After=docker.service
 Requires=docker.service
 
 [Service]
-TimeoutStartSec=30
+TimeoutStartSec=60
 Restart=always
 ExecStart=/usr/bin/docker run -v /var/run/docker.sock:/var/run/docker.sock v2tec/watchtower:armhf-latest --cleanup
 
