@@ -1,13 +1,10 @@
 #!/usr/bin/python3
 import os
-import sys
 import platform
 import time
 from flask import Flask
 import gpiozero
-from celery import Celery
 from gpiozero.pins.pigpio import PiGPIOFactory
-import app
 from app import config
 
 is_pi = (platform.machine() == 'armv7l')
@@ -35,21 +32,14 @@ class water_pump(object):
         
     def On(self):
         self.state = 1
-        g_settings = config.loadSettings()
-        self.solenoid = gpiozero.LED(int(g_settings.hardware_water_gpio_pin), pin_factory=factory)
         self.solenoid.on()
         
     def Off(self):
         self.state = 0
-        g_settings = config.loadSettings()
-        self.solenoid = gpiozero.LED(int(g_settings.hardware_water_gpio_pin), pin_factory=factory)
-
         self.solenoid.off()
                     
     def water_for(self, secs):
-            g_settings = config.loadSettings()
             self.state = 1
-            self.solenoid = gpiozero.LED(int(g_settings.hardware_water_gpio_pin), pin_factory=factory)
             self.solenoid.on()
             time.sleep(secs)
             self.solenoid.off()
