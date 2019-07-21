@@ -19,28 +19,6 @@ sudo systemctl enable docker
 sudo systemctl start docker
 sudo usermod -aG docker $USER
 
-# install and enable pigpio (remote GPIO server)
-echo Installing pigpio remote GPIO server...
-sudo apt-get install pigpio
-sudo systemctl stop pigpiod
-
-sudo rm -f /lib/systemd/system/pigpiod.service
-sudo cat << 'EOF' >> /lib/systemd/system/pigpiod.service
-[Unit]
-Description=Daemon required to control GPIO pins via pigpio
-[Service]
-ExecStart=/usr/bin/pigpiod
-ExecStop=/bin/systemctl kill pigpiod
-Type=forking
-[Install]
-WantedBy=multi-user.target
-EOF
-sudo chmod 644 /lib/systemd/system/pigpiod.service
-sudo systemctl daemon-reload
-sudo systemctl unmask pigpiod
-sudo systemctl enable pigpiod
-sudo systemctl start pigpiod
-
 # install solarpigardener docker container and systemd service:
 echo Installing solarpigardener docker container and systemd service...
 sudo rm -f /etc/systemd/system/solarpigardener.service
@@ -85,6 +63,10 @@ EOF
 sudo chmod 644 /etc/systemd/system/watchtower.service
 sudo systemctl enable watchtower
 sudo systemctl start watchtower
+
+echo "Please use the raspi-config tool to enable remote GPIO."
+read -n 1 -s -r -p "Press any key to continue"
+sudo raspi-config
 
 # change hostname to 'solarpi'
 echo Changing hostname to solarpi.
