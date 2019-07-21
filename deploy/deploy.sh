@@ -10,22 +10,40 @@ fi
 
 # install and enable docker:
 echo Installing docker...
-sudo apt-get install docker.io
+sudo apt-get remove docker docker-engine docker.io containerd runc
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+
 sudo systemctl unmask docker
 sudo systemctl enable docker
 sudo systemctl start docker
-
+sudo usermod -aG docker $USER
 
 # install and enable pigpio (remote GPIO server)
 echo Installing pigpio remote GPIO server...
 sudo apt-get install pigpio
+sudo systemctl stop pigpiod
+
+sudo rm -f /lib/systemd/system/pigpiod.service
+sudo cat << 'EOF' >> /lib/systemd/system/pigpiod.service
+[Unit]
+Description=Daemon required to control GPIO pins via pigpio
+[Service]
+ExecStart=/usr/bin/pigpiod
+ExecStop=/bin/systemctl kill pigpiod
+Type=forking
+[Install]
+WantedBy=multi-user.target
+EOF
+sudo chmod 644 /lib/systemd/system/pigpiod.service
+sudo systemctl daemon-reload
 sudo systemctl unmask pigpiod
 sudo systemctl enable pigpiod
 sudo systemctl start pigpiod
 
-
 # install solarpigardener docker container and systemd service:
 echo Installing solarpigardener docker container and systemd service...
+sudo rm -f /etc/systemd/system/solarpigardener.service
 sudo cat << 'EOF' >> /etc/systemd/system/solarpigardener.service
 [Unit]
 Description=solarpigardener Container
@@ -33,9 +51,10 @@ After=docker.service
 Requires=docker.service
 
 [Service]
-TimeoutStartSec=0
+TimeoutStartSec=30
 Restart=always
 ExecStart=/usr/bin/docker run -v /etc/gardener:/etc/gardener -p 80:80 scverhagen/solarpigardener
+ExecStop=/usr/bin/docker stop scverhagen/solarpigardener
 
 [Install]
 WantedBy=multi-user.target
@@ -47,6 +66,7 @@ sudo systemctl start solarpigardener
 
 # install watchtower docker container and systemd service:
 echo Installing watchtower docker container and systemd service...
+sudo rm -f /etc/systemd/system/watchtower.service
 sudo cat << 'EOF' >> /etc/systemd/system/watchtower.service
 [Unit]
 Description=solarpigardener Container
@@ -54,9 +74,10 @@ After=docker.service
 Requires=docker.service
 
 [Service]
-TimeoutStartSec=30
+TimeoutStartSec=60
 Restart=always
 ExecStart=/usr/bin/docker run -v /var/run/docker.sock:/var/run/docker.sock v2tec/watchtower:armhf-latest --cleanup
+ExecStop=/usr/bin/docker stop v2tec/watchtower:armhf-latest
 
 [Install]
 WantedBy=multi-user.target

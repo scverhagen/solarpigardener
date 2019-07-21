@@ -106,8 +106,12 @@ def www_root():
 
 @app.route('/config', methods=["GET","POST"])
 def www_config():
-    if not session.get('logged_in'):
+    firstrun = False
+    if not session.get('logged_in') and os.path.exists(config.settingsjsonpath):
         return render_template('access_denied.html')
+    
+    if not os.path.exists(config.settingsjsonpath):
+        firstrun = True
     
     g_settings = config.loadSettings()
     form = forms.ConfigForm(obj=g_settings)
@@ -127,7 +131,7 @@ def www_config():
         else:
             return redirect( url_for('www_root') )
     
-    return render_template('config.html', form=form)
+    return render_template('config.html', form=form, firstrun=firstrun)
 
 @app.route('/login', methods=["GET","POST"])
 def www_login():

@@ -18,5 +18,5 @@ class ConfigForm(Form):
     submit = SubmitField('Save Settings')
 
 class LoginForm(Form):
-    password = PasswordField(label=u'Password', validators=[DataRequired()])
+    password = PasswordField(label=u'Password')
     submit = SubmitField(label='Log In')
