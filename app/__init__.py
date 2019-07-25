@@ -26,7 +26,8 @@ app.config['SECRET_KEY'] = 'garDener_debuG_seCret'
 
 
 app.config.update(
-    CELERY_BROKER_URL='redis://' + get_ip() + ':6379'
+    #CELERY_BROKER_URL='redis://' + get_ip() + ':6379'
+    CELERY_BROKER_URL='redis://redis:6379'
     #CELERY_RESULT_BACKEND='redis://' + get_ip() + ':6379'
 )
 

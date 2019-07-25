@@ -1,2 +1,2 @@
 #!/bin/bash
-docker build -t scverhagen/solarpigardener:testing .
+docker build -t scverhagen/solarpigardener .

@@ -1,5 +1,5 @@
 flask
-flask-sqlalchemy
+pymongo
 flask-WTF
 flask_migrate
 celery
