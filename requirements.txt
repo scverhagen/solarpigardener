@@ -7,3 +7,4 @@ redis
 RPi.GPIO
 pigpio
 gpiozero
+waitress

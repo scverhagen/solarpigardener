@@ -1,7 +1,6 @@
 FROM balenalib/raspberry-pi-debian:latest
 LABEL maintainer="Steve Verhagen<scverhagen@gmail.com>"
 
-#COPY qemu-arm-static /usr/bin
 RUN mkdir -p /etc/gardener
 
 #build date/time (unix format)
@@ -9,10 +8,9 @@ RUN date > /build_date.txt
 
 RUN mkdir /etc/redis
 COPY ./redis.conf /etc/redis
-RUN apt-get update && apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y redis-server python3 python3-dev python3-setuptools python3-pip nginx build-essential && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y redis-server python3 python3-dev python3-setuptools python3-pip build-essential && rm -rf /var/lib/apt/lists/*
 
 RUN pip3 install --upgrade pip
-RUN pip3 install uwsgi
 COPY ./nginx.conf /etc/nginx/sites-enabled/default
 
 COPY ./ ./solarpi
