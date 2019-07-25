@@ -1,5 +1,5 @@
 flask
-flask-sqlalchemy
+pymongo
 flask-WTF
 flask_migrate
 celery
@@ -7,3 +7,4 @@ redis
 RPi.GPIO
 pigpio
 gpiozero
+waitress
