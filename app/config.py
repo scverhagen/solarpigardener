@@ -8,6 +8,7 @@ settingsjsonpath = os.path.join(thisfilepath, 'gardener_settings.json')
 
 IN_DOCKER = False
 BUILD_DATE = "n/a"
+COMMIT_ID = "n/a"
 docker_env = os.environ.get('IN_DOCKER', False)
 if docker_env:
     print('Running in docker container.')
@@ -16,6 +17,10 @@ if docker_env:
     with open('/build_date.txt', 'r') as f:
         BUILD_DATE = f.readline()
     print('BUILD DATE:  ' + BUILD_DATE)
+
+    with open('/commit.txt', 'r') as f:
+        COMMIT_ID = f.readline()
+    print('COMMIT ID:  ' + COMMIT_ID)
 
 class Settings(object):
     def __init__(self, hardware_water_gpio_pin = 21, water_inches_per_week = 2, water_days_per_week = 2, water_time_hour = 6, sprinkler_inches_per_minute = "0.00418", enable_auto_watering = 0, submit = None, admin_password = '', redirect_url='http://solarpi'):
