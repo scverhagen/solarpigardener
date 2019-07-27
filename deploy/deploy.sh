@@ -36,7 +36,6 @@ Restart=always
 User=root
 Group=docker
 ExecStartPre=/usr/bin/docker-compose -f /home/pi/solarpigardener/docker-compose.yml down -v
-ExecStartPre=/usr/bin/docker-compose -f /home/pi/solarpigardener/docker-compose.yml pull
 ExecStart=/usr/bin/docker-compose -f /home/pi/solarpigardener/docker-compose.yml up
 ExecStop=/usr/bin/docker-compose -f /home/pi/solarpigardener/docker-compose.yml down -v
 [Install]
