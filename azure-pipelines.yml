@@ -33,7 +33,7 @@ steps:
 - script: |
     sudo apt update
     docker run --rm --privileged multiarch/qemu-user-static:register
-    docker build -t scverhagen/solarpigardener .
+    ./build_docker_image.sh
     docker login -u $(DOCKER_USERNAME) -p $(DOCKER_PASSWORD)
     docker push scverhagen/solarpigardener
   displayName: 'docker'

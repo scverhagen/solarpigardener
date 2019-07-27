@@ -7,9 +7,6 @@ RUN mkdir -p /etc/gardener
 #build date/time (unix format)
 RUN date > /build_date.txt
 
-#current commit hash:
-RUN git log --pretty=format:'%H' -n 1 > /commit.txt
-
 #RUN mkdir /etc/redis
 #COPY ./redis.conf /etc/redis
 RUN apt-get update && apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y python3 python3-dev python3-setuptools python3-pip build-essential && rm -rf /var/lib/apt/lists/*
