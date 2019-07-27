@@ -18,7 +18,8 @@ if docker_env:
         BUILD_DATE = f.readline()
     print('BUILD DATE:  ' + BUILD_DATE)
 
-    with open(os.path.join(thisfilepath, 'commit.txt'), 'r') as f:
+    with open(os.path.join(thisfilepath, '..', 'commit.txt'), 'r') as f:
+        os.path.basename
         COMMIT_ID = f.readline()
     print('COMMIT ID:  ' + COMMIT_ID)
 
