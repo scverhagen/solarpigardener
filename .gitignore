@@ -3,3 +3,5 @@ __pycache__/
 gardener_settings.json
 data/
 *.rdb
+commit.txt
+build_date.txt

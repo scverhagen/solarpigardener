@@ -132,7 +132,7 @@ def www_config():
         else:
             return redirect( url_for('www_root') )
     
-    return render_template('config.html', form=form, firstrun=firstrun, build_date=config.BUILD_DATE)
+    return render_template('config.html', form=form, firstrun=firstrun, build_date=config.BUILD_DATE, commit_id=config.COMMIT_ID)
 
 @app.route('/login', methods=["GET","POST"])
 def www_login():
