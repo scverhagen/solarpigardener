@@ -19,50 +19,33 @@ sudo systemctl enable docker
 sudo systemctl start docker
 sudo usermod -aG docker $USER
 
+# install docker-compose (using pip)
+sudo apt-get install python3 python3-pip
+sudo pip3 install docker-compose
+
 # install solarpigardener docker container and systemd service:
 echo Installing solarpigardener docker container and systemd service...
 sudo rm -f /etc/systemd/system/solarpigardener.service
 sudo cat << 'EOF' >> /etc/systemd/system/solarpigardener.service
 [Unit]
-Description=solarpigardener Container
-After=docker.service
+Description=solarpigardener
 Requires=docker.service
-
+After=docker.service
 [Service]
-TimeoutStartSec=30
 Restart=always
-ExecStart=/usr/bin/docker run -v /etc/gardener:/etc/gardener -p 80:80 scverhagen/solarpigardener
-ExecStop=/usr/bin/docker stop scverhagen/solarpigardener
-
+User=root
+Group=docker
+ExecStartPre=/usr/bin/docker-compose -f /home/pi/solarpigardener/docker-compose.yml down -v
+ExecStartPre=/usr/bin/docker-compose -f /home/pi/solarpigardener/docker-compose.yml pull
+ExecStart=/usr/bin/docker-compose -f /home/pi/solarpigardener/docker-compose.yml up
+ExecStop=/usr/bin/docker-compose -f /home/pi/solarpigardener/docker-compose.yml down -v
 [Install]
 WantedBy=multi-user.target
 EOF
+
 sudo chmod 644 /etc/systemd/system/solarpigardener.service
 sudo systemctl enable solarpigardener
 sudo systemctl start solarpigardener
-
-
-# install watchtower docker container and systemd service:
-echo Installing watchtower docker container and systemd service...
-sudo rm -f /etc/systemd/system/watchtower.service
-sudo cat << 'EOF' >> /etc/systemd/system/watchtower.service
-[Unit]
-Description=solarpigardener Container
-After=docker.service
-Requires=docker.service
-
-[Service]
-TimeoutStartSec=60
-Restart=always
-ExecStart=/usr/bin/docker run -v /var/run/docker.sock:/var/run/docker.sock v2tec/watchtower:armhf-latest --cleanup
-ExecStop=/usr/bin/docker stop v2tec/watchtower:armhf-latest
-
-[Install]
-WantedBy=multi-user.target
-EOF
-sudo chmod 644 /etc/systemd/system/watchtower.service
-sudo systemctl enable watchtower
-sudo systemctl start watchtower
 
 echo "Please use the raspi-config tool to enable remote GPIO."
 read -n 1 -s -r -p "Press any key to continue"
