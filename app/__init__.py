@@ -86,7 +86,7 @@ def www_schedule():
     water_mins_per_day = scheduler.get_water_mins_per_day(g_settings)
     total_water_mins_per_day = water_mins_per_day * int(g_settings.water_days_per_week)
     
-    return render_template('schedule.html', schedule=schedule, today=today, total_inches=total_inches, total_water_mins_per_day=total_water_mins_per_day)
+    return render_template('schedule.html', schedule=schedule, today=today, total_inches=total_inches, total_water_mins_per_day=round(total_water_mins_per_day,2))
  
 @app.route('/pump')
 def www_pump():
