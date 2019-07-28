@@ -8,4 +8,3 @@ RPi.GPIO
 pigpio
 gpiozero
 waitress
-numpy

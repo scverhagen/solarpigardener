@@ -9,7 +9,7 @@ RUN date > /build_date.txt
 
 #RUN mkdir /etc/redis
 #COPY ./redis.conf /etc/redis
-RUN apt-get update && apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y python3 python3-dev python3-setuptools python3-pip build-essential && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y python3 python3-dev python3-setuptools python3-pip python3-numpy build-essential && rm -rf /var/lib/apt/lists/*
 #RUN apt-get update && apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y python3-setuptools build-essential apt-utils && rm -rf /var/lib/apt/lists/*
 RUN pip3 install --upgrade pip
 
