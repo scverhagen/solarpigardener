@@ -123,8 +123,9 @@ def www_config():
         
         # use old password if none specified:
         if g_settings.admin_password == '':
-            session.clear()
             g_settings.admin_password = old_password
+        else:
+            session.clear()
 
         # save configuration
         config.saveSettings(g_settings)
