@@ -5,6 +5,7 @@ import socket
 
 from app import forms
 from app import config
+from app import scheduler
 
 def get_ip():
     # strange hack to get local ip address:
@@ -76,7 +77,16 @@ def www_controls_pump():
     
 @app.route('/schedule')
 def www_schedule():
-        return render_template('schedule.html')
+    g_settings = config.loadSettings()
+
+    schedule = scheduler.get_schedule()
+    today = scheduler.get_today()
+    total_inches = int(g_settings.water_inches_per_week)
+    
+    water_mins_per_day = scheduler.get_water_mins_per_day(g_settings)
+    total_water_mins_per_day = water_mins_per_day * int(g_settings.water_days_per_week)
+    
+    return render_template('schedule.html', schedule=schedule, today=today, total_inches=total_inches, total_water_mins_per_day=total_water_mins_per_day)
  
 @app.route('/pump')
 def www_pump():

@@ -24,7 +24,7 @@ if docker_env:
     print('COMMIT ID:  ' + COMMIT_ID)
 
 class Settings(object):
-    def __init__(self, hardware_water_gpio_pin = 21, water_inches_per_week = 2, water_days_per_week = 2, water_time_hour = 6, sprinkler_inches_per_minute = "0.00418", enable_auto_watering = 0, submit = None, admin_password = '', redirect_url='http://solarpi'):
+    def __init__(self, hardware_water_gpio_pin = 21, water_inches_per_week = 1, water_days_per_week = 2, water_time_hour = 6, sprinkler_inches_per_minute = "0.020", enable_auto_watering = 0, submit = None, admin_password = '', redirect_url='http://solarpi'):
         self.hardware_water_gpio_pin = hardware_water_gpio_pin
         self.water_inches_per_week = water_inches_per_week
         self.water_days_per_week = water_days_per_week
