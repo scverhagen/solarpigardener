@@ -101,7 +101,8 @@ def www_favicon():
 @app.route('/')
 def www_root():
     if os.path.exists(config.settingsjsonpath):
-        return render_template('index.html')
+        g_settings = config.loadSettings()
+        return render_template('index.html', g_settings=g_settings)
     else:
         return www_config()
 

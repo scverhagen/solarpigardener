@@ -1,5 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="jumbotron">
+<h3>Welcome to Solar Pi Gardener!</h3>
+{% if g_settings.enable_auto_watering == 1 %}
+    Automatic watering is ENABLED.  Click <a href="/schedule">here</a> to view watering schedule.
+{% else %}
+    The automatic watering feature is DISABLED.  Click <a href="/controls_pump">here</a> to water the garden manually or enable it in <a href="/config">settings</a>.
+{% endif %}
 </div>
 {% endblock %}
