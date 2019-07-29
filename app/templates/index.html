@@ -3,9 +3,10 @@
 <div class="jumbotron">
 <h3>Welcome to Solar Pi Gardener!</h3>
 {% if g_settings.enable_auto_watering == 1 %}
-    Automatic watering is ENABLED.  Click <a href="/schedule">here</a> to view watering schedule.
+    <button type="button" onclick="window.location.href = '/schedule'" class="btn btn-dark">View Watering Schedule</button><br><br><br>
 {% else %}
-    The automatic watering feature is DISABLED.  Click <a href="/controls_pump">here</a> to water the garden manually or enable it in <a href="/config">settings</a>.
+    
 {% endif %}
+    <button type="button" onclick="window.location.href = '/controls_pump'" class="btn btn-dark">Water Manually</button>
 </div>
 {% endblock %}

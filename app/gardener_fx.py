@@ -45,12 +45,12 @@ def time_to_text(secs):
         secs -= (num_mins * s_min)     
         
     secs = round(secs, 0)
-    if len(ttt) > 0:
-        ttt += ', '
-    if secs == 1:
-        ttt += '1 second'
+    if secs == 0:
+        pass
+    elif secs == 1:
+        ttt += ', 1 second'
     else:
-        ttt += str(secs) + ' seconds'
+        ttt += ', ' + str(secs) + ' seconds'
 
     return(ttt)
 

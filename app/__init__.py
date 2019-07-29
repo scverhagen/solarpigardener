@@ -2,6 +2,7 @@
 
 import os
 import socket
+import datetime
 
 from app import forms
 from app import config
@@ -80,13 +81,15 @@ def www_schedule():
     g_settings = config.loadSettings()
 
     schedule = scheduler.get_schedule()
-    today = scheduler.get_today()
     total_inches = int(g_settings.water_inches_per_week)
     
     water_mins_per_day = scheduler.get_water_mins_per_day(g_settings)
     total_water_mins_per_day = water_mins_per_day * int(g_settings.water_days_per_week)
     
-    return render_template('schedule.html', schedule=schedule, today=today, total_inches=total_inches, total_water_mins_per_day=round(total_water_mins_per_day,2))
+    t = datetime.datetime.strptime(str(g_settings.water_time_hour), "%H")
+    water_time = datetime.datetime.strftime( t, "%I:%M %p" )
+
+    return render_template('schedule.html', schedule=schedule, total_inches=total_inches, total_water_mins_per_day=round(total_water_mins_per_day,2), today=scheduler.get_dn(), water_time=water_time)
  
 @app.route('/pump')
 def www_pump():
