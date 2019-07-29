@@ -166,9 +166,12 @@ def www_login():
 
 @app.route('/logoff', methods=["GET"])
 def www_logoff():
+    g_settings = config.loadSettings()
     session.clear()
-    
-    return redirect( url_for('www_root') )
+    if len(g_settings.redirect_url) > 0:
+            return redirect( g_settings.redirect_url )
+    else:
+        return redirect( url_for('www_root') )
 
 #needs to be at end of file:
 if __name__ == '__main__':
