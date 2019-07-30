@@ -11,23 +11,19 @@ services:
     ports:
       - 80:80
     links:
-      - mongodb
+      - db
       - redis
     depends_on:
-      - mongodb
+      - db
       - redis
     restart: always
-  mongodb:
-    image: mongo:latest
-    container_name: "mongodb"
-    environment:
-      - MONGO_DATA_DIR=/data/db
-      - MONGO_LOG_DIR=/dev/null
+
+  db:
+    image: postgres
     volumes:
-      - /data/db:/data/db
+      - db-data:/var/lib/postgresql/data
     ports:
-      - 27017:27017
-    command: mongod --smallfiles --logpath=/dev/null # --quiet
+      - 5432:5432
 
   watchtower:
     image: v2tec/watchtower
@@ -40,3 +36,6 @@ services:
     ports:
       - "6379:6379"
     restart: always
+
+volumes:
+    db-data:
