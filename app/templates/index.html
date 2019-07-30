@@ -2,8 +2,9 @@
 {% block content %}
 <div class="jumbotron">
 <h3>Welcome to Solar Pi Gardener!</h3>
+<br>
 {% if g_settings.enable_auto_watering == 1 %}
-    <button type="button" onclick="window.location.href = '/schedule'" class="btn btn-dark">View Watering Schedule</button><br><br><br>
+    <button type="button" onclick="window.location.href = '/schedule'" class="btn btn-dark">View Watering Schedule</button>&emsp;
 {% else %}
     
 {% endif %}
