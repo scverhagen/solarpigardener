@@ -5,7 +5,7 @@
 <h3>Watering Schedule</h3>
 <div class="list-group">
   <a href="/config" class="list-group-item list-group-item-action list-group-item-dark">Watering time: {{ water_time }}</a>
-  <a href="/config" class="list-group-item list-group-item-action list-group-item-dark">Desired water application per week: {{ total_inches }}" ({{ total_water_mins_per_day }} mins)</a>
+  <a href="/config" class="list-group-item list-group-item-action list-group-item-dark">Desired water application: {{ total_inches }}" ({{ total_water_mins_per_day }} mins) per week</a>
 {% for day in schedule %}
  <a href="#" class="list-group-item list-group-item-action">{{ day[1] }}, {{ day[2] }}&emsp;<span style="float:right" class="badge badge-primary badge-pill">{% if day[5] != "" %}{{ day[5] }} ({{ day[3] }}"){% endif%}</span></a>
 {% endfor %}
