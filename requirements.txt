@@ -1,7 +1,5 @@
 flask
-pymongo
 flask-WTF
-flask_migrate
 celery
 redis
 RPi.GPIO
