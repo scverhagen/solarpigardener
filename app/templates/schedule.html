@@ -1,24 +1,18 @@
 {% extends "base.html" %}
 {% block content %}
+
 <div class="jumbotron">
 <h3>Watering Schedule</h3>
 Watering time: {{ water_time }}<br>
 Desired water application per week: {{ total_inches }}" ({{ total_water_mins_per_day }} mins)<br>
-<table border="1">
-<tr>
-<td><strong>Day</strong></td>
-<td><strong>Date</strong></td>
-<td><strong>Inches of Water</strong></td>
-<td><strong>Water Time</strong></td>
-</tr>
+<ul class="list-group">
 {% for day in schedule %}
-<tr{% if today == day[0] %} bgcolor="gray"{% endif%}>
-<td>{{ day[1] }}</td>
-<td>{{ day[2] }}</td>
-<td align="right">{{ day[3] }}</td>
-<td align="right">{{ day[5] }}</td>
-</tr>
+  <li class="list-group-item d-flex justify-content-between align-items-center">
+    {{ day[1] }}, {{ day[2] }}&emsp;
+    <span class="badge badge-primary badge-pill">{% if day[5] != "" %}{{ day[5] }} ({{ day[3] }}"){% endif%}</span>
+  </li>
 {% endfor %}
-</table>
-</div>
+</ul>
+<br>
+<button type="button" onclick="window.location.href = '/'" class="btn btn-dark">Go Back</button>
 {% endblock %}
